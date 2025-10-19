@@ -9,7 +9,7 @@ class StreakChain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentStreak = habit.currentStreak;
-    final maxVisibleLinks = 10; // Maximum links to show horizontally
+    final maxVisibleLinks = 10;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

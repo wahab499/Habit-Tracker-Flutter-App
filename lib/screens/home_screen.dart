@@ -21,12 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Habit Chain'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.analytics),
-            onPressed: _showStatistics,
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.analytics),
+        //     onPressed: _showStatistics,
+        //   ),
+        // ],
       ),
       body: ValueListenableBuilder(
         valueListenable: widget.habitService,
