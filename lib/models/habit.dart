@@ -80,4 +80,10 @@ class Habit {
       isGoodHabit: json['isGoodHabit'],
     );
   }
+
+  getWeeklyCompletionCounts() {}
+
+  getIntensityLevel(DateTime date) {}
+
+  getWeeklyCompletionData() {}
 }

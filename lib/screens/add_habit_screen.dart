@@ -339,6 +339,10 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     );
   }
 
+  Widget _buildcard() {
+    return Container();
+  }
+
   void _saveHabit() {
     if (_formKey.currentState!.validate()) {
       final newHabit = Habit(

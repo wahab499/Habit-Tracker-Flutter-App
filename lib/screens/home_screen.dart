@@ -1,9 +1,10 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:habit_chain/models/habit.dart';
 import 'package:habit_chain/screens/add_habit_screen.dart';
+import 'package:habit_chain/widget/githubgrid.dart';
 import 'package:habit_chain/services/habit_services.dart';
 import 'package:habit_chain/widget/habit_card.dart';
-import 'package:habit_chain/widget/statistics_card.dart';
 
 class HomeScreen extends StatefulWidget {
   final HabitService habitService;
@@ -13,6 +14,10 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+final rnd = Random(42);
+final weeks = 52;
+final data = List.generate(weeks * 7, (_) => rnd.nextInt(20));
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -95,6 +100,71 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
 
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 210,
+            width: 390,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ContributionGrid(
+                                      weeks: weeks, values: data)));
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.amber.shade200,
+                              borderRadius: BorderRadius.circular(10),
+                              border:
+                                  Border.all(width: 1, color: Colors.amber)),
+                          child: Icon(Icons.power),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.amber.shade200,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 1, color: Colors.amber)),
+                        child: Icon(Icons.check),
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ContributionGrid(
+                          weeks: weeks,
+                          values: data,
+                          estimatedVisibleColumns: 29,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
         // Habits List
         Expanded(
           child: ListView.builder(
@@ -102,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: widget.habitService.habits.length,
             itemBuilder: (context, index) {
               final habit = widget.habitService.habits[index];
-              return HabitCard(
+              return GithubHabitCard(
                 habit: habit,
                 onTap: () => _toggleHabitCompletion(habit),
                 onLongPress: () => _showHabitOptions(habit),
@@ -236,11 +306,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showStatistics() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => StatisticsCard(habitService: widget.habitService),
-    );
-  }
+  // void _showStatistics() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (context) => StatisticsCard(habitService: widget.habitService),
+  //   );
+  // }
 }
