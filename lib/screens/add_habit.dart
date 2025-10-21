@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:habit_chain/models/habit.dart';
-import 'package:habit_chain/services/habit_services.dart';
+import 'package:habit_chain/service/habit_service.dart';
 
 class AddHabitScreen extends StatefulWidget {
-  final HabitService habitService;
+  // final HabitService habitService;
 
-  const AddHabitScreen({Key? key, required this.habitService})
-      : super(key: key);
+  const AddHabitScreen({
+    Key? key,
+    // required this.habitService,
+  }) : super(key: key);
 
   @override
   State<AddHabitScreen> createState() => _AddHabitScreenState();
@@ -49,12 +50,12 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Habit'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _saveHabit,
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.check),
+        //     onPressed: _saveHabit,
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -339,27 +340,23 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     );
   }
 
-  Widget _buildcard() {
-    return Container();
-  }
+  // void _saveHabit() {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newHabit = Habit(
+  //       id: DateTime.now().millisecondsSinceEpoch.toString(),
+  //       name: _nameController.text,
+  //       description: _descriptionController.text,
+  //       targetCount: _targetCount,
+  //       creationDate: DateTime.now(),
+  //       color: _selectedColor,
+  //       emoji: _selectedEmoji,
+  //       isGoodHabit: _isGoodHabit,
+  //     );
 
-  void _saveHabit() {
-    if (_formKey.currentState!.validate()) {
-      final newHabit = Habit(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: _nameController.text,
-        description: _descriptionController.text,
-        targetCount: _targetCount,
-        creationDate: DateTime.now(),
-        color: _selectedColor,
-        emoji: _selectedEmoji,
-        isGoodHabit: _isGoodHabit,
-      );
-
-      widget.habitService.addHabit(newHabit);
-      Navigator.pop(context);
-    }
-  }
+  //     widget.habitService.addHabit(newHabit);
+  //     Navigator.pop(context);
+  //   }
+  // }
 
   @override
   void dispose() {

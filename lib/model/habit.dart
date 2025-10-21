@@ -29,6 +29,10 @@ class Habit {
     this.isGoodHabit = true,
   });
 
+  double get weeklyProgress {
+    return currentCount / targetCount;
+  }
+
   double get successRate {
     if (completionDates.isEmpty) return 0.0;
     final daysSinceCreation = DateTime.now().difference(creationDate).inDays;

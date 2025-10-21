@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:habit_chain/services/habit_services.dart';
-import 'screens/home_screen.dart';
+import 'package:habit_chain/screens/homescreen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final HabitService habitService = HabitService();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: HomeScreen(habitService: habitService),
+      home: Homescreen(),
       debugShowCheckedModeBanner: false,
     );
   }
