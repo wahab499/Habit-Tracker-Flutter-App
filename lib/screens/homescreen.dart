@@ -14,6 +14,7 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   final HabitService _habitService = HabitService();
   bool _isLoading = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -32,12 +33,88 @@ class _HomescreenState extends State<Homescreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text(
           'Habit Chain',
         ),
         centerTitle: true,
         backgroundColor: MyColors.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+            tooltip: 'Settings',
+          ),
+        ],
+      ),
+      endDrawer: SafeArea(
+        child: SizedBox(
+          width: 320,
+          child: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration:
+                      BoxDecoration(color: MyColors.primary.withOpacity(0.1)),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.settings, size: 28),
+                      SizedBox(width: 12),
+                      Text('Settings',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.tune),
+                  title: const Text('General'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.notifications_active),
+                  title: const Text('Daily Reminder'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette),
+                  title: const Text('Theme'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.archive_outlined),
+                  title: const Text('Archived Habit'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.import_export),
+                  title: const Text('Data Import Export'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.reorder),
+                  title: const Text('Reorder Habit'),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
