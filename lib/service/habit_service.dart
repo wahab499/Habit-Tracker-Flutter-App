@@ -1,28 +1,52 @@
 // services/habit_service.dart
+import 'dart:convert';
 import 'dart:math';
 import 'package:habit_chain/model/habit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitService {
   List<Habit> _habits = [];
+  static const String _habitsKey = 'habits';
 
   List<Habit> get habits => _habits;
 
-  void addHabit(Habit habit) {
+  // Load habits from local storage
+  Future<void> loadHabits() async {
+    final prefs = await SharedPreferences.getInstance();
+    final habitsJson = prefs.getStringList(_habitsKey) ?? [];
+
+    _habits =
+        habitsJson.map((json) => Habit.fromJson(jsonDecode(json))).toList();
+  }
+
+  // Save habits to local storage
+  Future<void> saveHabits() async {
+    final prefs = await SharedPreferences.getInstance();
+    final habitsJson =
+        _habits.map((habit) => jsonEncode(habit.toJson())).toList();
+
+    await prefs.setStringList(_habitsKey, habitsJson);
+  }
+
+  Future<void> addHabit(Habit habit) async {
     _habits.add(habit);
+    await saveHabits();
   }
 
-  void removeHabit(String id) {
+  Future<void> removeHabit(String id) async {
     _habits.removeWhere((habit) => habit.id == id);
+    await saveHabits();
   }
 
-  void updateHabit(Habit updatedHabit) {
+  Future<void> updateHabit(Habit updatedHabit) async {
     final index = _habits.indexWhere((habit) => habit.id == updatedHabit.id);
     if (index != -1) {
       _habits[index] = updatedHabit;
+      await saveHabits();
     }
   }
 
-  void markHabitCompleted(String id) {
+  Future<void> markHabitCompleted(String id) async {
     final habit = _habits.firstWhere((h) => h.id == id);
     final today = DateTime.now();
 
@@ -45,7 +69,26 @@ class HabitService {
       }
 
       habit.longestStreak = max(habit.longestStreak, habit.currentStreak);
+
+      await saveHabits();
     }
+  }
+
+  Future<void> markHabitUncompleted(String id) async {
+    final habit = _habits.firstWhere((h) => h.id == id);
+    final today = DateTime.now();
+
+    // Remove today's completion if it exists
+    habit.completionDates.removeWhere((date) =>
+        date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day);
+
+    if (habit.currentCount > 0) {
+      habit.currentCount--;
+    }
+
+    await saveHabits();
   }
 
   void resetWeeklyCounts() {
