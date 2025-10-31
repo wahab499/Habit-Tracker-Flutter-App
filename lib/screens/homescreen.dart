@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/screens/add_habit.dart';
 import 'package:habit_chain/service/habit_service.dart';
+import 'package:habit_chain/settings/archived.dart';
+import 'package:habit_chain/settings/general.dart';
+import 'package:habit_chain/settings/theme.dart';
 import 'package:habit_chain/widgets/habit_card.dart';
 
 class Homescreen extends StatefulWidget {
@@ -37,12 +40,16 @@ class _HomescreenState extends State<Homescreen> {
       appBar: AppBar(
         title: const Text(
           'Habit Chain',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: MyColors.primary,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
             onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
             tooltip: 'Settings',
           ),
@@ -73,7 +80,8 @@ class _HomescreenState extends State<Homescreen> {
                   leading: const Icon(Icons.tune),
                   title: const Text('General'),
                   onTap: () {
-                    Navigator.of(context).maybePop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => General()));
                   },
                 ),
                 ListTile(
@@ -87,14 +95,18 @@ class _HomescreenState extends State<Homescreen> {
                   leading: const Icon(Icons.palette),
                   title: const Text('Theme'),
                   onTap: () {
-                    Navigator.of(context).maybePop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Thememode()));
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.archive_outlined),
                   title: const Text('Archived Habit'),
                   onTap: () {
-                    Navigator.of(context).maybePop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ArchivedHabits()));
                   },
                 ),
                 ListTile(
