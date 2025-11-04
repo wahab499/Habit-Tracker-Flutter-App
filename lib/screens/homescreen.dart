@@ -3,9 +3,12 @@ import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/screens/add_habit.dart';
 import 'package:habit_chain/service/habit_service.dart';
 import 'package:habit_chain/settings/archived.dart';
+import 'package:habit_chain/settings/dataimportexport.dart';
 import 'package:habit_chain/settings/general.dart';
+import 'package:habit_chain/settings/reorder_habits.dart';
 import 'package:habit_chain/settings/theme.dart';
 import 'package:habit_chain/widgets/habit_card.dart';
+import 'package:habit_chain/widgets/settings_drawer.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -55,79 +58,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
         ],
       ),
-      endDrawer: SafeArea(
-        child: SizedBox(
-          width: 320,
-          child: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                  decoration:
-                      BoxDecoration(color: MyColors.primary.withOpacity(0.1)),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.settings, size: 28),
-                      SizedBox(width: 12),
-                      Text('Settings',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.tune),
-                  title: const Text('General'),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => General()));
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.notifications_active),
-                  title: const Text('Daily Reminder'),
-                  onTap: () {
-                    Navigator.of(context).maybePop();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.palette),
-                  title: const Text('Theme'),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Thememode()));
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.archive_outlined),
-                  title: const Text('Archived Habit'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ArchivedHabits()));
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.import_export),
-                  title: const Text('Data Import Export'),
-                  onTap: () {
-                    Navigator.of(context).maybePop();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.reorder),
-                  title: const Text('Reorder Habit'),
-                  onTap: () {
-                    Navigator.of(context).maybePop();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      endDrawer: const SettingsDrawer(),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _habitService.habits.isEmpty
@@ -206,4 +137,30 @@ class _HomescreenState extends State<Homescreen> {
       },
     );
   }
+}
+
+Widget _buildSettingTile({
+  required IconData icon,
+  required Color iconBgColor,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  return ListTile(
+    leading: Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: iconBgColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(icon, color: Colors.black87),
+    ),
+    title: Text(
+      title,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    onTap: onTap,
+  );
 }
