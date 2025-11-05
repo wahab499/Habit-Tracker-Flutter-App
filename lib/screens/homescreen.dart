@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/screens/add_habit.dart';
 import 'package:habit_chain/service/habit_service.dart';
-import 'package:habit_chain/settings/archived.dart';
-import 'package:habit_chain/settings/dataimportexport.dart';
-import 'package:habit_chain/settings/general.dart';
-import 'package:habit_chain/settings/reorder_habits.dart';
-import 'package:habit_chain/settings/theme.dart';
 import 'package:habit_chain/widgets/habit_card.dart';
 import 'package:habit_chain/widgets/settings_drawer.dart';
 

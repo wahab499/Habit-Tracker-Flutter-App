@@ -47,30 +47,13 @@ class _ContributionGridState extends State<ContributionGrid> {
 
   void _scrollToCurrentWeek() {
     if (_scrollController.hasClients) {
-      // Calculate the current week number
-      final currentWeek = _getCurrentWeekNumber();
-      final weekWidth = 12.0 + widget.columnSpacing; // 12px box + spacing
-      final targetOffset = currentWeek * weekWidth;
-
-      // Scroll to show the current week as the rightmost visible column
-      // Leave some space for the current week to be fully visible
-      final screenWidth = MediaQuery.of(context).size.width;
-      final targetScroll = (targetOffset - screenWidth + 200)
-          .clamp(0.0, _scrollController.position.maxScrollExtent);
-
+      // Scroll to the very end to show current week as the last column
       _scrollController.animateTo(
-        targetScroll,
+        _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOut,
       );
     }
-  }
-
-  int _getCurrentWeekNumber() {
-    // Get the week number of the current date
-    final startOfYear = DateTime(_today.year, 1, 1);
-    final daysSinceStart = _today.difference(startOfYear).inDays;
-    return (daysSinceStart / 7).floor();
   }
 
   @override
@@ -96,13 +79,13 @@ class _ContributionGridState extends State<ContributionGrid> {
       currentDate = currentDate.subtract(Duration(days: dayOfWeek - 1));
     }
 
-    // Generate weeks until we cover the entire year
-    while (currentDate.year <= _today.year) {
+    // Generate weeks until we cover the entire year plus current week
+    DateTime lastDate =
+        _today.add(Duration(days: 7 - _today.weekday)); // End of current week
+    while (currentDate.isBefore(lastDate) ||
+        currentDate.isAtSameMomentAs(lastDate)) {
       weeks.add(_buildWeek(currentDate));
       currentDate = currentDate.add(Duration(days: 7));
-
-      // Stop if we've gone past the current year
-      if (currentDate.year > _today.year) break;
     }
 
     return weeks;
@@ -117,6 +100,7 @@ class _ContributionGridState extends State<ContributionGrid> {
           final dayDate = weekStart.add(Duration(days: dayIndex));
           final isCompleted = _isDateCompleted(dayDate);
           final isToday = _isToday(dayDate);
+          final isFutureDate = dayDate.isAfter(_today);
 
           return Padding(
             padding: EdgeInsets.only(bottom: widget.rowSpacing),
@@ -124,10 +108,10 @@ class _ContributionGridState extends State<ContributionGrid> {
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                color: _getDayColor(isCompleted, isToday),
+                color: _getDayColor(isCompleted, isToday, isFutureDate),
                 borderRadius: BorderRadius.circular(2),
                 border: Border.all(
-                  color: _getBorderColor(isCompleted, isToday),
+                  color: _getBorderColor(isCompleted, isToday, isFutureDate),
                   width: isToday ? 2 : 1,
                 ),
               ),
@@ -151,8 +135,10 @@ class _ContributionGridState extends State<ContributionGrid> {
         date.day == _today.day;
   }
 
-  Color _getDayColor(bool isCompleted, bool isToday) {
-    if (isCompleted) {
+  Color _getDayColor(bool isCompleted, bool isToday, bool isFutureDate) {
+    if (isFutureDate) {
+      return Colors.grey[100]!; // Light gray for future dates
+    } else if (isCompleted) {
       return widget.habitColor ?? Colors.green;
     } else if (isToday) {
       return (widget.habitColor ?? Colors.green).withOpacity(0.3);
@@ -161,8 +147,10 @@ class _ContributionGridState extends State<ContributionGrid> {
     }
   }
 
-  Color _getBorderColor(bool isCompleted, bool isToday) {
-    if (isToday) {
+  Color _getBorderColor(bool isCompleted, bool isToday, bool isFutureDate) {
+    if (isFutureDate) {
+      return Colors.grey[200]!; // Lighter border for future dates
+    } else if (isToday) {
       return widget.habitColor ?? Colors.green;
     } else if (isCompleted) {
       return widget.habitColor ?? Colors.green;

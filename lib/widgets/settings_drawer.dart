@@ -272,7 +272,45 @@ class SettingsDrawer extends StatelessWidget {
                   icon: Icons.note_add,
                   iconBgColor: Colors.blueAccent,
                   title: 'Show Whats New ',
-                  onTap: () {})
+                  onTap: () {}),
+              _buildSettingTile(
+                  icon: Icons.note_add,
+                  iconBgColor: Colors.black,
+                  title: 'Send feedback ',
+                  onTap: () {}),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'About',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ),
+              _buildSettingTile(
+                  icon: Icons.web,
+                  iconBgColor: Colors.green,
+                  title: 'Website ',
+                  onTap: () {}),
+              _buildSettingTile(
+                  icon: Icons.no_accounts_outlined,
+                  iconBgColor: Colors.blueAccent,
+                  title: 'Follow on X',
+                  onTap: () {}),
+              _buildSettingTile(
+                  icon: Icons.lock,
+                  iconBgColor: Colors.pink,
+                  title: 'Privacy Policy',
+                  onTap: () {}),
+              _buildSettingTile(
+                  icon: Icons.no_accounts_outlined,
+                  iconBgColor: Colors.green,
+                  title: 'Terms of Use',
+                  onTap: () {}),
+              _buildSettingTile(
+                  icon: Icons.star,
+                  iconBgColor: Colors.purpleAccent,
+                  title: 'Rate the app',
+                  onTap: () {}),
             ],
           ),
         ),

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: Homescreen(),
+      home: const Homescreen(),
       debugShowCheckedModeBanner: false,
     );
   }
