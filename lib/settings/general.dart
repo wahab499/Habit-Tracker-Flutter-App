@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class General extends StatefulWidget {
   const General({super.key});
@@ -113,9 +114,24 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Week Starts On Monday',
+                            const Text('Default Mode',
                                 style: TextStyle(fontSize: 18)),
-                            Icon(Icons.arrow_right)
+                            Row(
+                              children: [
+                                ToggleSwitch(
+                                  initialLabelIndex: 0,
+                                  totalSwitches: 3,
+                                  icons: const [
+                                    Icons.abc,
+                                    Icons.add_ic_call_outlined,
+                                    Icons.macro_off
+                                  ],
+                                  onToggle: (index) {
+                                    print('switched to: $index');
+                                  },
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -124,7 +140,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Category Filter',
+                            const Text('Show Category Filter',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -163,7 +179,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Streak Count',
+                            const Text('Show Streak Count',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -180,7 +196,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Streak Goal',
+                            const Text('Show Streak Goal',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -197,7 +213,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Month Labels',
+                            const Text('Show Month Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -214,7 +230,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Day Labels',
+                            const Text('Show Day Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -231,7 +247,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show Categories',
+                            const Text('Show Categories',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -270,7 +286,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Allow Crashlytics',
+                            const Text('Allow Crashlytics',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -282,7 +298,7 @@ class _GeneralState extends State<General> {
                           ],
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

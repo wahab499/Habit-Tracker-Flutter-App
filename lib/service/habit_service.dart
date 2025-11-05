@@ -1,4 +1,3 @@
-// services/habit_service.dart
 import 'dart:convert';
 import 'dart:math';
 import 'package:habit_chain/model/habit.dart';
@@ -38,12 +37,17 @@ class HabitService {
     await saveHabits();
   }
 
-  Future<void> updateHabit(Habit updatedHabit) async {
-    final index = _habits.indexWhere((habit) => habit.id == updatedHabit.id);
+  Future<void> updateHabit(Habit habit) async {
+    final index = habits.indexWhere((h) => h.id == habit.id);
     if (index != -1) {
-      _habits[index] = updatedHabit;
+      habits[index] = habit;
       await saveHabits();
     }
+  }
+
+  Future<void> deleteHabit(String habitId) async {
+    habits.removeWhere((h) => h.id == habitId);
+    await saveHabits();
   }
 
   Future<void> markHabitCompleted(String id) async {

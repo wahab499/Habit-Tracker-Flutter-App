@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:habit_chain/colors.dart';
+import 'package:habit_chain/model/habit.dart';
 import 'package:habit_chain/screens/add_habit.dart';
 import 'package:habit_chain/service/habit_service.dart';
 import 'package:habit_chain/widgets/habit_card.dart';
 import 'package:habit_chain/widgets/settings_drawer.dart';
 
 class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
+  const Homescreen({
+    super.key,
+  });
 
   @override
   State<Homescreen> createState() => _HomescreenState();
@@ -28,6 +31,69 @@ class _HomescreenState extends State<Homescreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void _updateHabit(Habit updatedHabit) async {
+    await _habitService.updateHabit(updatedHabit);
+    setState(() {
+      final index =
+          _habitService.habits.indexWhere((h) => h.id == updatedHabit.id);
+      if (index != -1) {
+        _habitService.habits[index] = updatedHabit;
+      }
+    });
+  }
+
+  void _deleteHabit(String habitId) async {
+    await _habitService.deleteHabit(habitId);
+    setState(() {
+      _habitService.habits.removeWhere((h) => h.id == habitId);
+    });
+  }
+
+  void _completeHabit(Habit habit) async {
+    final today = DateTime.now();
+    final isCompletedToday = habit.isCompletedToday();
+
+    final updatedCompletionDates = List<DateTime>.from(habit.completionDates);
+
+    if (isCompletedToday) {
+      // Remove today's completion
+      updatedCompletionDates.removeWhere((date) =>
+          date.year == today.year &&
+          date.month == today.month &&
+          date.day == today.day);
+    } else {
+      // Add today's completion
+      updatedCompletionDates.add(today);
+    }
+
+    final updatedHabit = Habit(
+      id: habit.id,
+      name: habit.name,
+      description: habit.description,
+      targetCount: habit.targetCount,
+      currentCount: _calculateCurrentCount(updatedCompletionDates),
+      currentStreak: habit.currentStreak, // You might want to recalculate this
+      longestStreak: habit.longestStreak,
+      creationDate: habit.creationDate,
+      completionDates: updatedCompletionDates,
+      color: habit.color,
+      emoji: habit.emoji,
+      isGoodHabit: habit.isGoodHabit,
+    );
+
+    _updateHabit(updatedHabit);
+  }
+
+  int _calculateCurrentCount(List<DateTime> completionDates) {
+    // Calculate how many times completed this week
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    return completionDates
+        .where((date) =>
+            date.isAfter(startOfWeek.subtract(const Duration(days: 1))))
+        .length;
   }
 
   @override
@@ -115,19 +181,15 @@ class _HomescreenState extends State<Homescreen> {
         return HabitCard(
           habit: habit,
           onTap: () {
-            // Navigate to habit details if needed
+            // Handle tap on habit card (maybe show details)
+            print('Tapped on ${habit.name}');
           },
-          onComplete: () async {
-            if (habit.isCompletedToday()) {
-              await _habitService.markHabitUncompleted(habit.id);
-            } else {
-              await _habitService.markHabitCompleted(habit.id);
-            }
-            setState(() {});
-          },
+          onComplete: () => _completeHabit(habit),
           onDayTap: () {
-            // Handle day tap for progress grid
+            // Handle day tap in the grid if needed
           },
+          onHabitUpdated: _updateHabit,
+          onHabitDeleted: () => _deleteHabit(habit.id),
         );
       },
     );
