@@ -82,7 +82,7 @@ class _GeneralState extends State<General> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black, offset: Offset(0.5, 0.1),
                         spreadRadius: 0.1, // How much the shadow expands
                         blurRadius: 0.1,
@@ -97,7 +97,7 @@ class _GeneralState extends State<General> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Show View Mode Bottom Bar',
+                            const Text('Show View Mode Bottom Bar',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
                                 value: _onChange,
@@ -121,10 +121,16 @@ class _GeneralState extends State<General> {
                                 ToggleSwitch(
                                   initialLabelIndex: 0,
                                   totalSwitches: 3,
+                                  inactiveFgColor: Colors.white,
                                   icons: const [
-                                    Icons.abc,
+                                    Icons.list,
                                     Icons.add_ic_call_outlined,
                                     Icons.macro_off
+                                  ],
+                                  activeBgColors: const [
+                                    [Colors.blue],
+                                    [Colors.blue],
+                                    [Colors.blue],
                                   ],
                                   onToggle: (index) {
                                     print('switched to: $index');

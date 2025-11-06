@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/model/habit.dart';
 import 'package:habit_chain/screens/add_habit.dart';
@@ -6,144 +7,82 @@ import 'package:habit_chain/service/habit_service.dart';
 import 'package:habit_chain/widgets/habit_card.dart';
 import 'package:habit_chain/widgets/settings_drawer.dart';
 
-class Homescreen extends StatefulWidget {
+class Homescreen extends StatelessWidget {
   const Homescreen({
     super.key,
   });
 
   @override
-  State<Homescreen> createState() => _HomescreenState();
-}
+  Widget build(BuildContext context) {
+    final HabitController habitController = Get.find<HabitController>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-class _HomescreenState extends State<Homescreen> {
-  final HabitService _habitService = HabitService();
-  bool _isLoading = true;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadHabits();
-  }
-
-  Future<void> _loadHabits() async {
-    await _habitService.loadHabits();
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _updateHabit(Habit updatedHabit) async {
-    await _habitService.updateHabit(updatedHabit);
-    setState(() {
-      final index =
-          _habitService.habits.indexWhere((h) => h.id == updatedHabit.id);
-      if (index != -1) {
-        _habitService.habits[index] = updatedHabit;
-      }
-    });
-  }
-
-  void _deleteHabit(String habitId) async {
-    await _habitService.deleteHabit(habitId);
-    setState(() {
-      _habitService.habits.removeWhere((h) => h.id == habitId);
-    });
-  }
-
-  void _completeHabit(Habit habit) async {
-    final today = DateTime.now();
-    final isCompletedToday = habit.isCompletedToday();
-
-    final updatedCompletionDates = List<DateTime>.from(habit.completionDates);
-
-    if (isCompletedToday) {
-      // Remove today's completion
-      updatedCompletionDates.removeWhere((date) =>
-          date.year == today.year &&
-          date.month == today.month &&
-          date.day == today.day);
-    } else {
-      // Add today's completion
-      updatedCompletionDates.add(today);
+    void _updateHabit(Habit updatedHabit) async {
+      await habitController.updateHabit(updatedHabit);
     }
 
-    final updatedHabit = Habit(
-      id: habit.id,
-      name: habit.name,
-      description: habit.description,
-      targetCount: habit.targetCount,
-      currentCount: _calculateCurrentCount(updatedCompletionDates),
-      currentStreak: habit.currentStreak, // You might want to recalculate this
-      longestStreak: habit.longestStreak,
-      creationDate: habit.creationDate,
-      completionDates: updatedCompletionDates,
-      color: habit.color,
-      emoji: habit.emoji,
-      isGoodHabit: habit.isGoodHabit,
-    );
+    void _deleteHabit(String habitId) async {
+      await habitController.deleteHabit(habitId);
+    }
 
-    _updateHabit(updatedHabit);
-  }
+    void _completeHabit(Habit habit) async {
+      final isCompletedToday = habit.isCompletedToday();
 
-  int _calculateCurrentCount(List<DateTime> completionDates) {
-    // Calculate how many times completed this week
-    final now = DateTime.now();
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    return completionDates
-        .where((date) =>
-            date.isAfter(startOfWeek.subtract(const Duration(days: 1))))
-        .length;
-  }
+      if (isCompletedToday) {
+        await habitController.markHabitUncompleted(habit.id);
+      } else {
+        await habitController.markHabitCompleted(habit.id);
+      }
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text(
-          'Habit Chain',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        backgroundColor: MyColors.primary,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
-            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
-            tooltip: 'Settings',
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar(
+          title: const Text(
+            'Habit Chain',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
-        ],
-      ),
-      endDrawer: const SettingsDrawer(),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _habitService.habits.isEmpty
-              ? _buildEmptyState()
-              : _buildHabitsList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddHabitScreen(habitService: _habitService),
+          centerTitle: true,
+          backgroundColor: MyColors.primary,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
+              tooltip: 'Settings',
             ),
-          );
-          if (result == true) {
-            _loadHabits();
+          ],
+        ),
+        endDrawer: const SettingsDrawer(),
+        body: Obx(() {
+          if (habitController.isLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
-        },
-        child: const Icon(Icons.add),
+          
+          if (habitController.habits.isEmpty) {
+            return _buildEmptyState(context);
+          }
+          
+          return _buildHabitsList(context, habitController, _updateHabit, _deleteHabit, _completeHabit);
+        }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result = await Get.to(() => const AddHabitScreen());
+            if (result == true) {
+              habitController.loadHabits();
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    ));
+    );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,52 +111,34 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  Widget _buildHabitsList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(8.0),
-      itemCount: _habitService.habits.length,
-      itemBuilder: (context, index) {
-        final habit = _habitService.habits[index];
-        return HabitCard(
-          habit: habit,
-          onTap: () {
-            // Handle tap on habit card (maybe show details)
-            print('Tapped on ${habit.name}');
-          },
-          onComplete: () => _completeHabit(habit),
-          onDayTap: () {
-            // Handle day tap in the grid if needed
-          },
-          onHabitUpdated: _updateHabit,
-          onHabitDeleted: () => _deleteHabit(habit.id),
-        );
-      },
-    );
+  Widget _buildHabitsList(
+    BuildContext context,
+    HabitController habitController,
+    Function(Habit) updateHabit,
+    Function(String) deleteHabit,
+    Function(Habit) completeHabit,
+  ) {
+    return Obx(() {
+      return ListView.builder(
+        padding: const EdgeInsets.all(8.0),
+        itemCount: habitController.habits.length,
+        itemBuilder: (context, index) {
+          final habit = habitController.habits[index];
+          return HabitCard(
+            habit: habit,
+            onTap: () {
+              // Handle tap on habit card (maybe show details)
+              print('Tapped on ${habit.name}');
+            },
+            onComplete: () => completeHabit(habit),
+            onDayTap: () {
+              // Handle day tap in the grid if needed
+            },
+            onHabitUpdated: updateHabit,
+            onHabitDeleted: () => deleteHabit(habit.id),
+          );
+        },
+      );
+    });
   }
-}
-
-Widget _buildSettingTile({
-  required IconData icon,
-  required Color iconBgColor,
-  required String title,
-  required VoidCallback onTap,
-}) {
-  return ListTile(
-    leading: Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: iconBgColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(icon, color: Colors.black87),
-    ),
-    title: Text(
-      title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-      ),
-    ),
-    onTap: onTap,
-  );
 }

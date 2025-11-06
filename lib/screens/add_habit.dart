@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:habit_chain/service/habit_service.dart';
 import 'package:habit_chain/model/habit.dart';
 
 class AddHabitScreen extends StatefulWidget {
-  final HabitService habitService;
-
-  const AddHabitScreen({
-    Key? key,
-    required this.habitService,
-  }) : super(key: key);
+  const AddHabitScreen({Key? key}) : super(key: key);
 
   @override
   State<AddHabitScreen> createState() => _AddHabitScreenState();
@@ -343,6 +339,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
 
   void _saveHabit() async {
     if (_formKey.currentState!.validate()) {
+      final habitController = Get.find<HabitController>();
       final newHabit = Habit(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
@@ -354,8 +351,8 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
         isGoodHabit: _isGoodHabit,
       );
 
-      await widget.habitService.addHabit(newHabit);
-      Navigator.pop(context, true);
+      await habitController.addHabit(newHabit);
+      Get.back(result: true);
     }
   }
 

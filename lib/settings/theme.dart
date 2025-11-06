@@ -1,71 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:habit_chain/theme_provider.dart';
 
 class Thememode extends StatelessWidget {
   const Thememode({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Theme',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
+      appBar: AppBar(
+        title: const Text(
+          'Theme',
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        body: Column(children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
+      ),
+      body: Obx(() {
+        final currentTheme = themeController.themeMode;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            height: 200,
+            width: 395,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: const [
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [
                         BoxShadow(
-                          color: Colors.black, offset: Offset(0.5, 0.1),
-                          spreadRadius: 0.1, // How much the shadow expands
+                          color: Colors.black.withValues(alpha: 0.1),
+                          offset: const Offset(0.5, 0.1),
+                          spreadRadius: 0.1,
                           blurRadius: 0.1,
                         )
-                      ]),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('System', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Light', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('Dark', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                        ),
                       ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          _buildThemeOption(
+                            context: context,
+                            title: 'System',
+                            themeMode: ThemeMode.system,
+                            currentTheme: currentTheme,
+                            icon: Icons.brightness_auto,
+                            onTap: () =>
+                                themeController.setThemeMode(ThemeMode.system),
+                          ),
+                          _buildThemeOption(
+                            context: context,
+                            title: 'Light',
+                            themeMode: ThemeMode.light,
+                            currentTheme: currentTheme,
+                            icon: Icons.light_mode,
+                            onTap: () =>
+                                themeController.setThemeMode(ThemeMode.light),
+                          ),
+                          _buildThemeOption(
+                            context: context,
+                            title: 'Dark',
+                            themeMode: ThemeMode.dark,
+                            currentTheme: currentTheme,
+                            icon: Icons.dark_mode,
+                            onTap: () =>
+                                themeController.setThemeMode(ThemeMode.dark),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ]));
+        );
+      }),
+    );
+  }
+
+  Widget _buildThemeOption({
+    required BuildContext context,
+    required String title,
+    required ThemeMode themeMode,
+    required ThemeMode currentTheme,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final isSelected = currentTheme == themeMode;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icon,
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isSelected
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
+              ],
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_circle,
+                color: Theme.of(context).primaryColor,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
