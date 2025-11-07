@@ -8,6 +8,7 @@ class Thememode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find<ThemeController>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -18,71 +19,60 @@ class Thememode extends StatelessWidget {
       body: Obx(() {
         final currentTheme = themeController.themeMode;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            height: 200,
-            width: 395,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: [
-                Padding(
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).cardColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(0.5, 0.1),
+                      spreadRadius: 0.1,
+                      blurRadius: 0.1,
+                    )
+                  ],
+                ),
+                child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).cardColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          offset: const Offset(0.5, 0.1),
-                          spreadRadius: 0.1,
-                          blurRadius: 0.1,
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          _buildThemeOption(
-                            context: context,
-                            title: 'System',
-                            themeMode: ThemeMode.system,
-                            currentTheme: currentTheme,
-                            icon: Icons.brightness_auto,
-                            onTap: () =>
-                                themeController.setThemeMode(ThemeMode.system),
-                          ),
-                          _buildThemeOption(
-                            context: context,
-                            title: 'Light',
-                            themeMode: ThemeMode.light,
-                            currentTheme: currentTheme,
-                            icon: Icons.light_mode,
-                            onTap: () =>
-                                themeController.setThemeMode(ThemeMode.light),
-                          ),
-                          _buildThemeOption(
-                            context: context,
-                            title: 'Dark',
-                            themeMode: ThemeMode.dark,
-                            currentTheme: currentTheme,
-                            icon: Icons.dark_mode,
-                            onTap: () =>
-                                themeController.setThemeMode(ThemeMode.dark),
-                          ),
-                        ],
+                  child: Column(
+                    children: [
+                      _buildThemeOption(
+                        context: context,
+                        title: 'System',
+                        themeMode: ThemeMode.system,
+                        currentTheme: currentTheme,
+                        icon: Icons.brightness_auto,
+                        onTap: () =>
+                            themeController.setThemeMode(ThemeMode.system),
                       ),
-                    ),
+                      _buildThemeOption(
+                        context: context,
+                        title: 'Light',
+                        themeMode: ThemeMode.light,
+                        currentTheme: currentTheme,
+                        icon: Icons.light_mode,
+                        onTap: () =>
+                            themeController.setThemeMode(ThemeMode.light),
+                      ),
+                      _buildThemeOption(
+                        context: context,
+                        title: 'Dark',
+                        themeMode: ThemeMode.dark,
+                        currentTheme: currentTheme,
+                        icon: Icons.dark_mode,
+                        onTap: () =>
+                            themeController.setThemeMode(ThemeMode.dark),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         );
       }),
     );

@@ -78,7 +78,10 @@ class HabitCard extends StatelessWidget {
                             habit.description,
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey[600],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey[400]
+                                          : Colors.grey[600],
                                     ),
                           ),
                       ],
@@ -92,14 +95,18 @@ class HabitCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: habit.isCompletedToday()
                             ? habit.color
-                            : Colors.grey[300],
+                            : Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[700]!
+                                : Colors.grey[300]!,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.check,
                         color: habit.isCompletedToday()
                             ? Colors.white
-                            : Colors.grey[600],
+                            : Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[400]!
+                                : Colors.grey[600]!,
                         size: 20,
                       ),
                     ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class General extends StatefulWidget {
@@ -8,12 +10,56 @@ class General extends StatefulWidget {
   State<General> createState() => _GeneralState();
 }
 
-class _GeneralState extends State<General> {
+class SettingsController extends GetxController {
+  var categoryFilter = true.obs;
+}
+
+class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
   bool _onChange = false;
+  bool _currentDay = false;
+  bool _viewmodebtmbar = true;
+  bool _categoryFilter = false;
+  bool _streakCount = false;
+  bool _streakGoal = false;
+  bool _monthLabels = false;
+  bool _daylabels = false;
+  bool _categories = false;
+  bool _crashlytics = false;
+  late TabController _tabController;
+  String _selectedDay = 'Monday';
+  final List<String> _days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _days.length, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _selectedDay = _days[_tabController.index];
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final SettingsController settingsController =
+        Get.find<SettingsController>();
     return Scaffold(
-      appBar: AppBar.new(
+      appBar: AppBar(
         title: Text(
           'General',
           style: TextStyle(
@@ -33,8 +79,9 @@ class _GeneralState extends State<General> {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black, offset: Offset(0.5, 0.1),
-                        spreadRadius: 0.1, // How much the shadow expands
+                        color: Colors.black,
+                        offset: Offset(0.5, 0.1),
+                        spreadRadius: 0.1,
                         blurRadius: 0.1,
                       )
                     ]),
@@ -44,13 +91,148 @@ class _GeneralState extends State<General> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Week Starts On Monday',
-                                style: TextStyle(fontSize: 18)),
-                            Icon(Icons.arrow_right)
-                          ],
+                        child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (context) => Container(
+                                padding: const EdgeInsets.all(24),
+                                height: 320,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Header
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Week Starts On',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          icon: const Icon(Icons.close_rounded,
+                                              size: 24),
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    // Description
+                                    Text(
+                                      'Select the day of the week that starts the week',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey[600],
+                                        height: 1.4,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 24),
+
+                                    // 7 Days Grid
+                                    Container(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: Row(
+                                        children: [
+                                          _buildDayBox('Mon', 0),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Tue', 1),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Wed', 2),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Thu', 3),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Fri', 4),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Sat', 5),
+                                          const SizedBox(width: 8),
+                                          _buildDayBox('Sun', 6),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 20),
+
+                                    // Selected Day & Button
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Selected: $_selectedDay',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey[700],
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xFF6366F1),
+                                              foregroundColor: Colors.white,
+                                              elevation: 0,
+                                              shadowColor: Colors.transparent,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 24,
+                                                      vertical: 12),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Done',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Week Starts On $_selectedDay',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              Icon(Icons.arrow_right)
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -61,12 +243,13 @@ class _GeneralState extends State<General> {
                             Text('Highlight current day',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _currentDay,
+                              onChanged: (value) {
+                                setState(() {
+                                  _currentDay = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -75,19 +258,22 @@ class _GeneralState extends State<General> {
                 ),
               ),
             ),
+            // ... rest of your existing containers and widgets remain the same
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Colors.black, offset: Offset(0.5, 0.1),
-                        spreadRadius: 0.1, // How much the shadow expands
-                        blurRadius: 0.1,
-                      )
-                    ]),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.5, 0.1),
+                      spreadRadius: 0.1,
+                      blurRadius: 0.1,
+                    )
+                  ],
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -100,46 +286,56 @@ class _GeneralState extends State<General> {
                             const Text('Show View Mode Bottom Bar',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Default Mode',
-                                style: TextStyle(fontSize: 18)),
-                            Row(
-                              children: [
-                                ToggleSwitch(
-                                  initialLabelIndex: 0,
-                                  totalSwitches: 3,
-                                  inactiveFgColor: Colors.white,
-                                  icons: const [
-                                    Icons.list,
-                                    Icons.add_ic_call_outlined,
-                                    Icons.macro_off
-                                  ],
-                                  activeBgColors: const [
-                                    [Colors.blue],
-                                    [Colors.blue],
-                                    [Colors.blue],
-                                  ],
-                                  onToggle: (index) {
-                                    print('switched to: $index');
-                                  },
-                                ),
-                              ],
+                              value: _viewmodebtmbar,
+                              onChanged: (value) {
+                                setState(() {
+                                  _viewmodebtmbar = value;
+                                });
+                              },
                             )
                           ],
                         ),
+                      ),
+// With animation
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 300),
+                        crossFadeState: _viewmodebtmbar
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Default Mode',
+                                  style: TextStyle(fontSize: 18)),
+                              Row(
+                                children: [
+                                  ToggleSwitch(
+                                    initialLabelIndex: 0,
+                                    totalSwitches: 3,
+                                    inactiveFgColor: Colors.white,
+                                    icons: const [
+                                      Icons.list,
+                                      Icons.view_compact,
+                                      Icons.view_list_rounded,
+                                    ],
+                                    activeBgColors: const [
+                                      [Colors.blue],
+                                      [Colors.blue],
+                                      [Colors.blue],
+                                    ],
+                                    onToggle: (index) {
+                                      print('switched to: $index');
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        secondChild:
+                            const SizedBox.shrink(), // Empty when hidden
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -149,12 +345,15 @@ class _GeneralState extends State<General> {
                             const Text('Show Category Filter',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: settingsController.categoryFilter.value,
+                              onChanged: (value) {
+                                setState(() {
+                                  settingsController.categoryFilter.value =
+                                      value;
+                                  //_categoryFilter = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -167,15 +366,17 @@ class _GeneralState extends State<General> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black, offset: Offset(0.5, 0.1),
-                        spreadRadius: 0.1, // How much the shadow expands
-                        blurRadius: 0.1,
-                      )
-                    ]),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.5, 0.1),
+                      spreadRadius: 0.1,
+                      blurRadius: 0.1,
+                    )
+                  ],
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -188,12 +389,13 @@ class _GeneralState extends State<General> {
                             const Text('Show Streak Count',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _streakCount,
+                              onChanged: (value) {
+                                setState(() {
+                                  _streakCount = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -205,12 +407,13 @@ class _GeneralState extends State<General> {
                             const Text('Show Streak Goal',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _streakGoal,
+                              onChanged: (value) {
+                                setState(() {
+                                  _streakGoal = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -222,12 +425,13 @@ class _GeneralState extends State<General> {
                             const Text('Show Month Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _monthLabels,
+                              onChanged: (value) {
+                                setState(() {
+                                  _monthLabels = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -239,12 +443,13 @@ class _GeneralState extends State<General> {
                             const Text('Show Day Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _daylabels,
+                              onChanged: (value) {
+                                setState(() {
+                                  _daylabels = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -256,12 +461,13 @@ class _GeneralState extends State<General> {
                             const Text('Show Categories',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _categories,
+                              onChanged: (value) {
+                                setState(() {
+                                  _categories = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -274,15 +480,17 @@ class _GeneralState extends State<General> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black, offset: Offset(0.5, 0.1),
-                        spreadRadius: 0.1, // How much the shadow expands
-                        blurRadius: 0.1,
-                      )
-                    ]),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.5, 0.1),
+                      spreadRadius: 0.1,
+                      blurRadius: 0.1,
+                    )
+                  ],
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -295,17 +503,18 @@ class _GeneralState extends State<General> {
                             const Text('Allow Crashlytics',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
-                                value: _onChange,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onChange = value;
-                                  });
-                                })
+                              value: _crashlytics,
+                              onChanged: (value) {
+                                setState(() {
+                                  _crashlytics = value;
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
                       const Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -320,6 +529,51 @@ class _GeneralState extends State<General> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDayBox(String day, int index) {
+    bool isSelected = _selectedDay.substring(0, 3) == day;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedDay = _days[index];
+            _tabController.index = index;
+          });
+        },
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF6366F1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isSelected ? const Color(0xFF6366F1) : Colors.grey[300]!,
+              width: 2,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.purple.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Text(
+              day,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.black87,
+              ),
+            ),
+          ),
         ),
       ),
     );

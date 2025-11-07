@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:habit_chain/screens/homescreen.dart';
 import 'package:habit_chain/service/habit_service.dart';
+import 'package:habit_chain/settings/general.dart';
 import 'package:habit_chain/theme_provider.dart';
 
 void main() {
   // Initialize GetX controllers
   Get.put(ThemeController());
   Get.put(HabitController());
+  Get.put(SettingsController());
 
   runApp(MyApp());
 }
