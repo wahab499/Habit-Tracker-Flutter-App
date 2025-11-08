@@ -88,64 +88,41 @@ class Homescreen extends StatelessWidget {
 
                 return Center(
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
+                          color: Colors.grey.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Obx(() {
-                          if (!settingsController.categoryFilter.value)
-                            return SizedBox.shrink();
-                          return ToggleSwitch(
-                            initialLabelIndex: 0,
-                            totalSwitches: 3,
-                            inactiveFgColor: Colors.white,
-                            icons: const [
-                              Icons.list,
-                              Icons.view_compact,
-                              Icons.view_list_rounded,
-                            ],
-                            activeBgColors: const [
-                              [Colors.blue],
-                              [Colors.blue],
-                              [Colors.blue],
-                            ],
-                            onToggle: (index) {
-                              print('switched to: $index');
-                              // Add your view mode logic here
-                            },
-                          );
-                        })
-                        // child: ToggleSwitch(
-                        //   initialLabelIndex: 0,
-                        //   totalSwitches: 3,
-                        //   inactiveFgColor: Colors.white,
-                        //   icons: const [
-                        //     Icons.list,
-                        //     Icons.view_compact,
-                        //     Icons.view_list_rounded,
-                        //   ],
-                        //   activeBgColors: const [
-                        //     [Colors.blue],
-                        //     [Colors.blue],
-                        //     [Colors.blue],
-                        //   ],
-                        //   onToggle: (index) {
-                        //     print('switched to: $index');
-                        //     // Add your view mode logic here
-                        //   },
-                        // ),
-                        ),
+                    child: Obx(() {
+                      if (!settingsController.categoryFilter.value)
+                        return SizedBox.shrink();
+                      return ToggleSwitch(
+                        iconSize: 22,
+                        initialLabelIndex: 0,
+                        totalSwitches: 3,
+                        inactiveFgColor: Colors.white,
+                        icons: const [
+                          Icons.list,
+                          Icons.view_compact,
+                          Icons.view_list_rounded,
+                        ],
+                        activeBgColors: const [
+                          [Colors.blue],
+                          [Colors.blue],
+                          [Colors.blue],
+                        ],
+                        onToggle: (index) {
+                          print('switched to: $index');
+                          // Add your view mode logic here
+                        },
+                      );
+                    }),
                   ),
                 );
               }),
@@ -164,53 +141,6 @@ class Homescreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
-
-    // return SafeArea(
-    //   child: Scaffold(
-    //     key: scaffoldKey,
-    //     appBar: AppBar(
-    //       title: const Text(
-    //         'Habit Chain',
-    //         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-    //       ),
-    //       centerTitle: true,
-    //       backgroundColor: MyColors.primary,
-    //       actions: [
-    //         IconButton(
-    //           icon: const Icon(
-    //             Icons.settings,
-    //             color: Colors.white,
-    //           ),
-    //           onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
-    //           tooltip: 'Settings',
-    //         ),
-    //       ],
-    //     ),
-    //     endDrawer: SettingsDrawer(),
-    //     body: Obx(() {
-    //       if (habitController.isLoading) {
-    //         return const Center(child: CircularProgressIndicator());
-    //       }
-
-    //       if (habitController.habits.isEmpty) {
-    //         return _buildEmptyState(context);
-    //       }
-
-    //       return _buildHabitsList(context, habitController, _updateHabit,
-    //           _deleteHabit, _completeHabit);
-    //     }),
-    //     floatingActionButton: FloatingActionButton(
-    //       onPressed: () async {
-    //         final result = await Get.to(() => const AddHabitScreen());
-    //         if (result == true) {
-    //           habitController.loadHabits();
-    //         }
-    //       },
-    //       child: const Icon(Icons.add),
-    //     ),
-    //     floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    //   ),
-    // );
   }
 
   Widget _buildEmptyState(BuildContext context) {
