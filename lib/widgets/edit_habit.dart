@@ -96,33 +96,35 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
     Navigator.pop(context);
   }
 
-  void _deleteHabit() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Habit'),
-        content: const Text(
-            'Are you sure you want to delete this habit? This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Close bottom sheet
-              // You'll need to handle deletion in your parent widget
-            },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // void _deleteHabit() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Delete Habit'),
+  //       content:
+  //           Text('Are you sure you want to delete "${widget.habit.name}"?'),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: const Text('Cancel'),
+  //         ),
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.pop(context); // Close dialog
+  //             Navigator.pop(context); // Close bottom sheet
+  //             if (widget.onHabitDeleted != null) {
+  //               widget.onHabitDeleted!();
+  //             }
+  //           },
+  //           child: const Text(
+  //             'Delete',
+  //             style: TextStyle(color: Colors.red),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,20 +152,14 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
+          const Row(
             children: [
-              const Text(
+              Text(
                 'Edit Habit',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.delete_outline, color: Colors.red),
-                onPressed: _deleteHabit,
-                tooltip: 'Delete Habit',
               ),
             ],
           ),
