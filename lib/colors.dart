@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyColors {
-  static const Color primary = Colors.blue;
+  static const primary = Colors.blueGrey;
+  static const white = Colors.white;
+  static const black = Colors.black;
+  static const blue = Colors.blue;
 }

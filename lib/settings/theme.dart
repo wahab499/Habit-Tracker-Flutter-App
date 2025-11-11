@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/theme_provider.dart';
 
 class Thememode extends StatelessWidget {
@@ -87,6 +88,7 @@ class Thememode extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isSelected = currentTheme == themeMode;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
       onTap: onTap,
@@ -101,8 +103,11 @@ class Thememode extends StatelessWidget {
                 Icon(
                   icon,
                   color: isSelected
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).textTheme.bodyLarge?.color,
+                      ? MyColors.blue // Selected icon - always blue
+                      : (isDark
+                          ? Colors.white
+                          : Colors
+                              .black), // Unselected icon - white in dark, black in light
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -112,16 +117,19 @@ class Thememode extends StatelessWidget {
                     fontWeight:
                         isSelected ? FontWeight.w600 : FontWeight.normal,
                     color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).textTheme.bodyLarge?.color,
+                        ? MyColors.blue // Selected text - always blue
+                        : (isDark
+                            ? Colors.white
+                            : Colors
+                                .black), // Unselected text - white in dark, black in light
                   ),
                 ),
               ],
             ),
             if (isSelected)
-              Icon(
+              const Icon(
                 Icons.check_circle,
-                color: Theme.of(context).primaryColor,
+                color: MyColors.blue, // Check icon - always blue when selected
               ),
           ],
         ),

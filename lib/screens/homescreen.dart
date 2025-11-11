@@ -16,6 +16,7 @@ class Homescreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final HabitController habitController = Get.find<HabitController>();
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final SettingsController settingsController =
@@ -45,7 +46,8 @@ class Homescreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             'Habit Chain',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
           ),
           centerTitle: true,
           backgroundColor: MyColors.primary,
@@ -90,7 +92,7 @@ class Homescreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(9),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withValues(alpha: 0.3),
@@ -106,16 +108,17 @@ class Homescreen extends StatelessWidget {
                         iconSize: 22,
                         initialLabelIndex: 0,
                         totalSwitches: 3,
-                        inactiveFgColor: Colors.white,
+                        // inactiveFgColor: Colors.white,
+                        inactiveFgColor: isDark ? Colors.black : Colors.white,
                         icons: const [
                           Icons.list,
                           Icons.view_compact,
                           Icons.view_list_rounded,
                         ],
                         activeBgColors: const [
-                          [Colors.blue],
-                          [Colors.blue],
-                          [Colors.blue],
+                          [MyColors.primary],
+                          [MyColors.primary],
+                          [MyColors.primary],
                         ],
                         onToggle: (index) {
                           print('switched to: $index');
@@ -130,6 +133,7 @@ class Homescreen extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: MyColors.primary,
           onPressed: () async {
             final result = await Get.to(() => const AddHabitScreen());
             if (result == true) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_chain/model/habit.dart';
-import 'package:habit_chain/widgets/edit_habit.dart';
 import 'package:habit_chain/widgets/github_grid.dart';
 import 'package:habit_chain/widgets/habit_header.dart';
 import 'package:habit_chain/widgets/habit_progress_bottom_sheet.dart';
@@ -67,71 +66,6 @@ class HabitCard extends StatelessWidget {
                 habit: habit,
                 onComplete: onComplete,
               ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       padding: const EdgeInsets.all(8),
-              //       decoration: BoxDecoration(
-              //         color: habit.color.withOpacity(0.2),
-              //         shape: BoxShape.circle,
-              //       ),
-              //       child: Text(
-              //         habit.emoji,
-              //         style: const TextStyle(fontSize: 16),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 12),
-              //     Expanded(
-              //       child: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           Text(
-              //             habit.name,
-              //             style:
-              //                 Theme.of(context).textTheme.titleMedium?.copyWith(
-              //                       fontWeight: FontWeight.bold,
-              //                     ),
-              //           ),
-              //           if (habit.description.isNotEmpty)
-              //             Text(
-              //               habit.description,
-              //               style:
-              //                   Theme.of(context).textTheme.bodySmall?.copyWith(
-              //                         color: Theme.of(context).brightness ==
-              //                                 Brightness.dark
-              //                             ? Colors.grey[400]
-              //                             : Colors.grey[600],
-              //                       ),
-              //             ),
-              //         ],
-              //       ),
-              //     ),
-              //     // Check Button
-              //     GestureDetector(
-              //       onTap: onComplete,
-              //       child: Container(
-              //         padding: const EdgeInsets.all(8),
-              //         decoration: BoxDecoration(
-              //           color: habit.isCompletedToday()
-              //               ? habit.color
-              //               : Theme.of(context).brightness == Brightness.dark
-              //                   ? Colors.grey[700]!
-              //                   : Colors.grey[300]!,
-              //           shape: BoxShape.circle,
-              //         ),
-              //         child: Icon(
-              //           Icons.check,
-              //           color: habit.isCompletedToday()
-              //               ? Colors.white
-              //               : Theme.of(context).brightness == Brightness.dark
-              //                   ? Colors.grey[400]!
-              //                   : Colors.grey[600]!,
-              //           size: 20,
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               const SizedBox(height: 12),
               SizedBox(
                 height: 135,

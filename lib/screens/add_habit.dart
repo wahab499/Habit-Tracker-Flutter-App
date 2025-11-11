@@ -260,7 +260,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: _selectedEmoji == emoji
-                        ? _selectedColor.withOpacity(0.2)
+                        ? _selectedColor.withValues(alpha: 0.2)
                         : Colors.grey[200],
                     shape: BoxShape.circle,
                   ),

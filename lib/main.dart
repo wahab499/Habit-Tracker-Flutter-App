@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           //primarySwatch: Colors.blue,
           useMaterial3: true,
           brightness: Brightness.light,
-          colorScheme: ColorScheme.light(
+          colorScheme: const ColorScheme.light(
             primary: Colors.blue,
             onPrimary: Colors.white,
             surface: Colors.white,
@@ -37,14 +37,13 @@ class MyApp extends StatelessWidget {
           ),
         ),
         darkTheme: ThemeData(
-          //primarySwatch: Colors.blue,
           useMaterial3: true,
           brightness: Brightness.dark,
           colorScheme: ColorScheme.dark(
             primary: Colors.blue,
             onPrimary: Colors.white,
             surface: Colors.grey[900]!,
-            onSurface: Colors.white, // Light text on dark background
+            //onSurface: Colors.white, // Light text on dark background
           ),
         ),
         themeMode: themeController.themeMode,

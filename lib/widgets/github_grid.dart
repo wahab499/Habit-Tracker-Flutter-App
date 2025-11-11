@@ -110,10 +110,6 @@ class _ContributionGridState extends State<ContributionGrid> {
               decoration: BoxDecoration(
                 color: _getDayColor(isCompleted, isToday, isFutureDate),
                 borderRadius: BorderRadius.circular(2),
-                border: Border.all(
-                  color: _getBorderColor(isCompleted, isToday, isFutureDate),
-                  width: isToday ? 2 : 1,
-                ),
               ),
             ),
           );
@@ -136,17 +132,21 @@ class _ContributionGridState extends State<ContributionGrid> {
   }
 
   Color _getDayColor(bool isCompleted, bool isToday, bool isFutureDate) {
+    final Color baseColor = widget.habitColor ?? Colors.green;
+
     if (isFutureDate) {
-      return Colors.grey[100]!; // Light gray for future dates
+      return baseColor.withValues(alpha: 0.1); // Very light for future dates
     } else if (isCompleted) {
-      return widget.habitColor ?? Colors.green;
+      return baseColor; // Full color for completed days
     } else if (isToday) {
-      return (widget.habitColor ?? Colors.green).withOpacity(0.3);
+      return baseColor.withValues(alpha: 0.6); // Medium opacity for today
     } else {
-      return Colors.transparent;
+      return baseColor.withValues(
+          alpha: 0.15); // Light color for all other boxes
     }
   }
 
+  // This method is no longer used since we removed borders, but keeping it in case you need it elsewhere
   Color _getBorderColor(bool isCompleted, bool isToday, bool isFutureDate) {
     if (isFutureDate) {
       return Colors.grey[200]!; // Lighter border for future dates

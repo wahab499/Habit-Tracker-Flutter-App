@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/settings/archived.dart';
 import 'package:habit_chain/settings/dataimportexport.dart';
@@ -13,6 +11,7 @@ class SettingsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: SizedBox(
         width: 320,
@@ -37,19 +36,22 @@ class SettingsDrawer extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: MyColors.primary.withOpacity(0.15),
+                        color: isDark ? MyColors.white : MyColors.blue,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.settings,
-                          size: 28, color: Colors.black87),
+                      child: Icon(
+                        Icons.settings,
+                        size: 28,
+                        color: isDark ? MyColors.black : MyColors.white,
+                      ),
                     ),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       'Settings',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                        color: isDark ? MyColors.white : MyColors.black,
                       ),
                     ),
                   ],
@@ -57,6 +59,7 @@ class SettingsDrawer extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.tune,
                 iconBgColor: Colors.blue,
                 title: 'General',
@@ -68,12 +71,14 @@ class SettingsDrawer extends StatelessWidget {
                 },
               ),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.notifications_active,
                 iconBgColor: Colors.orange,
                 title: 'Daily Reminder',
                 onTap: () => Navigator.of(context).maybePop(),
               ),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.palette,
                 iconBgColor: Colors.purple,
                 title: 'Theme',
@@ -85,6 +90,7 @@ class SettingsDrawer extends StatelessWidget {
                 },
               ),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.archive_outlined,
                 iconBgColor: Colors.green,
                 title: 'Archived Habits',
@@ -97,6 +103,7 @@ class SettingsDrawer extends StatelessWidget {
                 },
               ),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.import_export,
                 iconBgColor: Colors.teal,
                 title: 'Data Import / Export',
@@ -109,6 +116,7 @@ class SettingsDrawer extends StatelessWidget {
                 },
               ),
               _buildSettingTile(
+                textcolor: isDark ? MyColors.white : MyColors.black,
                 icon: Icons.reorder,
                 iconBgColor: Colors.pink,
                 title: 'Reorder Habits',
@@ -129,6 +137,7 @@ class SettingsDrawer extends StatelessWidget {
                 ),
               ),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.umbrella,
                   iconBgColor: Colors.orange,
                   title: 'Show Onboarding',
@@ -271,11 +280,13 @@ class SettingsDrawer extends StatelessWidget {
                     );
                   }),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.note_add,
                   iconBgColor: Colors.blueAccent,
                   title: 'Show Whats New ',
                   onTap: () {}),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.note_add,
                   iconBgColor: Colors.black,
                   title: 'Send feedback ',
@@ -289,26 +300,31 @@ class SettingsDrawer extends StatelessWidget {
                 ),
               ),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.web,
                   iconBgColor: Colors.green,
                   title: 'Website ',
                   onTap: () {}),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.no_accounts_outlined,
                   iconBgColor: Colors.blueAccent,
                   title: 'Follow on X',
                   onTap: () {}),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.lock,
                   iconBgColor: Colors.pink,
                   title: 'Privacy Policy',
                   onTap: () {}),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.no_accounts_outlined,
                   iconBgColor: Colors.green,
                   title: 'Terms of Use',
                   onTap: () {}),
               _buildSettingTile(
+                  textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.star,
                   iconBgColor: Colors.purpleAccent,
                   title: 'Rate the app',
@@ -323,6 +339,7 @@ class SettingsDrawer extends StatelessWidget {
   static Widget _buildSettingTile({
     required IconData icon,
     required Color iconBgColor,
+    required Color textcolor,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -330,16 +347,22 @@ class SettingsDrawer extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: iconBgColor.withOpacity(0.15),
+          color: iconBgColor,
+          //.withOpacity(0.15),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, color: iconBgColor),
+        child: Icon(
+          icon,
+          //color: iconBgColor
+          color: Colors.white,
+        ),
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
+          color: textcolor,
         ),
       ),
       onTap: onTap,

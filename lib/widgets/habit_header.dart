@@ -18,7 +18,7 @@ class HabitHeaderWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: habit.color.withOpacity(0.2),
+            color: habit.color.withValues(alpha: 0.3),
             shape: BoxShape.circle,
           ),
           child: Text(
