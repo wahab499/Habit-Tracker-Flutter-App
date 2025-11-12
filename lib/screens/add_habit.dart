@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:habit_chain/screens/emoji_selection_screen.dart';
 import 'package:habit_chain/service/habit_service.dart';
 import 'package:habit_chain/model/habit.dart';
 
@@ -245,6 +246,46 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
+
+        // Current emoji display and button to open full selector
+        Row(
+          children: [
+            // Current selected emoji
+            if (_selectedEmoji.isNotEmpty)
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    _selectedEmoji,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              ),
+
+            const SizedBox(width: 12),
+
+            // Button to open full emoji selector
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _openEmojiSelector,
+                icon: const Icon(Icons.emoji_emotions),
+                label: const Text('Choose Emoji'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Quick access emojis (optional - keep your current horizontal list)
         SizedBox(
           height: 50,
           child: ListView.builder(
@@ -260,7 +301,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: _selectedEmoji == emoji
-                        ? _selectedColor.withValues(alpha: 0.2)
+                        ? Theme.of(context).primaryColor.withOpacity(0.2)
                         : Colors.grey[200],
                     shape: BoxShape.circle,
                   ),
@@ -276,6 +317,37 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
           ),
         ),
       ],
+    );
+  }
+
+// Method to open emoji selector
+  void _openEmojiSelector() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            EmojiSelectionScreen(
+          currentEmoji: _selectedEmoji,
+          onEmojiSelected: (emoji) {
+            setState(() {
+              _selectedEmoji = emoji;
+            });
+          },
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
     );
   }
 

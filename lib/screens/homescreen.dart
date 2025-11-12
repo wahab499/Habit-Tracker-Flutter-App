@@ -189,18 +189,21 @@ class Homescreen extends StatelessWidget {
         itemCount: habitController.habits.length,
         itemBuilder: (context, index) {
           final habit = habitController.habits[index];
-          return HabitCard(
-            habit: habit,
-            onTap: () {
-              // Handle tap on habit card (maybe show details)
-              print('Tapped on ${habit.name}');
-            },
-            onComplete: () => completeHabit(habit),
-            onDayTap: () {
-              // Handle day tap in the grid if needed
-            },
-            onHabitUpdated: updateHabit,
-            onHabitDeleted: () => deleteHabit(habit.id),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 40.0),
+            child: HabitCard(
+              habit: habit,
+              onTap: () {
+                // Handle tap on habit card (maybe show details)
+                print('Tapped on ${habit.name}');
+              },
+              onComplete: () => completeHabit(habit),
+              onDayTap: () {
+                // Handle day tap in the grid if needed
+              },
+              onHabitUpdated: updateHabit,
+              onHabitDeleted: () => deleteHabit(habit.id),
+            ),
           );
         },
       );

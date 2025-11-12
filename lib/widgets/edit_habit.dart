@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_chain/model/habit.dart';
+import 'package:habit_chain/screens/emoji_selection_screen.dart';
 
 class EditHabitBottomSheet extends StatefulWidget {
   final Habit habit;
@@ -95,36 +96,6 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
     widget.onHabitUpdated(updatedHabit);
     Navigator.pop(context);
   }
-
-  // void _deleteHabit() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: const Text('Delete Habit'),
-  //       content:
-  //           Text('Are you sure you want to delete "${widget.habit.name}"?'),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.pop(context),
-  //           child: const Text('Cancel'),
-  //         ),
-  //         TextButton(
-  //           onPressed: () {
-  //             Navigator.pop(context); // Close dialog
-  //             Navigator.pop(context); // Close bottom sheet
-  //             if (widget.onHabitDeleted != null) {
-  //               widget.onHabitDeleted!();
-  //             }
-  //           },
-  //           child: const Text(
-  //             'Delete',
-  //             style: TextStyle(color: Colors.red),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -254,42 +225,8 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
           ),
           const SizedBox(height: 16),
 
-          // Emoji Selection
-          const Text(
-            'Emoji',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 50,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _availableEmojis.length,
-              itemBuilder: (context, index) {
-                final emoji = _availableEmojis[index];
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedEmoji = emoji),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: _selectedEmoji == emoji
-                          ? _selectedColor.withOpacity(0.2)
-                          : Colors.grey[200],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        emoji,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          _buildEmojiSelector(),
+
           const SizedBox(height: 16),
 
           // Habit Type
@@ -361,6 +298,120 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
             Text(title, style: TextStyle(color: color)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmojiSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Select Emoji',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+
+        // Current emoji display and button to open full selector
+        Row(
+          children: [
+            // Current selected emoji
+            if (_selectedEmoji.isNotEmpty)
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    _selectedEmoji,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              ),
+
+            const SizedBox(width: 12),
+
+            // Button to open full emoji selector
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _openEmojiSelector,
+                icon: const Icon(Icons.emoji_emotions),
+                label: const Text('Choose Emoji'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Quick access emojis (optional - keep your current horizontal list)
+        SizedBox(
+          height: 50,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: _availableEmojis.length,
+            itemBuilder: (context, index) {
+              final emoji = _availableEmojis[index];
+              return GestureDetector(
+                onTap: () => setState(() => _selectedEmoji = emoji),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    color: _selectedEmoji == emoji
+                        ? Theme.of(context).primaryColor.withOpacity(0.2)
+                        : Colors.grey[200],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      emoji,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+// Method to open emoji selector
+  void _openEmojiSelector() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            EmojiSelectionScreen(
+          currentEmoji: _selectedEmoji,
+          onEmojiSelected: (emoji) {
+            setState(() {
+              _selectedEmoji = emoji;
+            });
+          },
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
       ),
     );
   }
