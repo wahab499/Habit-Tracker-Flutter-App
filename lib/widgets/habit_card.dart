@@ -25,8 +25,9 @@ class HabitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.black,
       elevation: 2,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: InkWell(
         //onTap: onTap,
         onTap: () {
@@ -68,7 +69,7 @@ class HabitCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               SizedBox(
-                height: 135,
+                height: 105,
                 child: ContributionGrid(
                   completionDates: habit.completionDates,
                   habitColor: habit.color,

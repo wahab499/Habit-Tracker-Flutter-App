@@ -13,8 +13,8 @@ class ContributionGrid extends StatefulWidget {
     Key? key,
     required this.completionDates,
     this.habitColor,
-    this.columnSpacing = 6.0,
-    this.rowSpacing = 6.0,
+    this.columnSpacing = 5.0,
+    this.rowSpacing = 5.0,
   }) : super(key: key);
 
   @override
@@ -105,8 +105,8 @@ class _ContributionGridState extends State<ContributionGrid> {
           return Padding(
             padding: EdgeInsets.only(bottom: widget.rowSpacing),
             child: Container(
-              width: 12,
-              height: 12,
+              width: 10,
+              height: 10,
               decoration: BoxDecoration(
                 color: _getDayColor(isCompleted, isToday, isFutureDate),
                 borderRadius: BorderRadius.circular(2),

@@ -23,7 +23,9 @@ class HabitHeaderWidget extends StatelessWidget {
           ),
           child: Text(
             habit.emoji,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(
+              fontSize: 16,
+            ),
           ),
         ),
         const SizedBox(width: 12),

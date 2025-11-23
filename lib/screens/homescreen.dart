@@ -101,31 +101,31 @@ class Homescreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Obx(() {
-                      if (!settingsController.categoryFilter.value)
-                        return SizedBox.shrink();
-                      return ToggleSwitch(
-                        iconSize: 22,
-                        initialLabelIndex: 0,
-                        totalSwitches: 3,
-                        // inactiveFgColor: Colors.white,
-                        inactiveFgColor: isDark ? Colors.black : Colors.white,
-                        icons: const [
-                          Icons.list,
-                          Icons.view_compact,
-                          Icons.view_list_rounded,
-                        ],
-                        activeBgColors: const [
-                          [MyColors.primary],
-                          [MyColors.primary],
-                          [MyColors.primary],
-                        ],
-                        onToggle: (index) {
-                          print('switched to: $index');
-                          // Add your view mode logic here
-                        },
-                      );
-                    }),
+                    // child: Obx(() {
+                    //   if (!settingsController.categoryFilter.value)
+                    //     return SizedBox.shrink();
+                    //   return ToggleSwitch(
+                    //     iconSize: 22,
+                    //     initialLabelIndex: 0,
+                    //     totalSwitches: 3,
+                    //     // inactiveFgColor: Colors.white,
+                    //     inactiveFgColor: isDark ? Colors.black : Colors.white,
+                    //     icons: const [
+                    //       Icons.list,
+                    //       Icons.view_compact,
+                    //       Icons.view_list_rounded,
+                    //     ],
+                    //     activeBgColors: const [
+                    //       [MyColors.primary],
+                    //       [MyColors.primary],
+                    //       [MyColors.primary],
+                    //     ],
+                    //     onToggle: (index) {
+                    //       print('switched to: $index');
+                    //       // Add your view mode logic here
+                    //     },
+                    //   );
+                    // }),
                   ),
                 );
               }),
@@ -190,7 +190,7 @@ class Homescreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final habit = habitController.habits[index];
           return Padding(
-            padding: const EdgeInsets.only(bottom: 40.0),
+            padding: const EdgeInsets.only(bottom: 14.0),
             child: HabitCard(
               habit: habit,
               onTap: () {

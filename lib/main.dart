@@ -30,19 +30,20 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.light,
           colorScheme: const ColorScheme.light(
-            primary: Colors.blue,
+            primary: Color(0xff4CAF50),
             onPrimary: Colors.white,
-            surface: Colors.white,
+            surface: Color(0xffF5F7FA),
             onSurface: Colors.black, // Dark text on light background
           ),
         ),
         darkTheme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
-          colorScheme: ColorScheme.dark(
+          colorScheme: const ColorScheme.dark(
             primary: Colors.blue,
+
             onPrimary: Colors.white,
-            surface: Colors.grey[900]!,
+            surface: Color(0xFF1A1A1A),
             //onSurface: Colors.white, // Light text on dark background
           ),
         ),
