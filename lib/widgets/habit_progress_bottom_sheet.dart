@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/model/habit.dart';
 import 'package:habit_chain/widgets/edit_habit.dart';
 import 'package:habit_chain/widgets/github_grid.dart';
@@ -25,6 +26,7 @@ class HabitProgressBottomSheet extends StatefulWidget {
 
 class _HabitProgressBottomSheetState extends State<HabitProgressBottomSheet> {
   late DateTime _currentMonth;
+
   final List<String> _weekDays = [
     'Mon',
     'Tue',
@@ -116,11 +118,13 @@ class _HabitProgressBottomSheetState extends State<HabitProgressBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? MyColors.background : MyColors.white,
+        //color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -430,9 +434,9 @@ class _HabitProgressBottomSheetState extends State<HabitProgressBottomSheet> {
     if (isFutureDate) {
       return Colors.grey[50]!;
     } else if (isCompleted) {
-      return widget.habit.color.withOpacity(0.8);
+      return widget.habit.color.withValues(alpha: 0.8);
     } else if (isToday) {
-      return widget.habit.color.withOpacity(0.2);
+      return widget.habit.color.withValues(alpha: 0.2);
     } else {
       return Colors.grey[100]!;
     }
@@ -440,7 +444,7 @@ class _HabitProgressBottomSheetState extends State<HabitProgressBottomSheet> {
 
   Color _getTextColor(bool isCompleted, bool isToday, bool isFutureDate) {
     if (isFutureDate) {
-      return Colors.grey[400]!;
+      return Colors.black.withValues(alpha: 0.5);
     } else if (isCompleted) {
       return Colors.white;
     } else if (isToday) {

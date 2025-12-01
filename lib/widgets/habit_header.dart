@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/model/habit.dart';
 
 class HabitHeaderWidget extends StatelessWidget {
@@ -13,6 +14,7 @@ class HabitHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Container(
@@ -37,6 +39,7 @@ class HabitHeaderWidget extends StatelessWidget {
                 habit.name,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: isDark ? MyColors.white : MyColors.white,
                     ),
               ),
               if (habit.description.isNotEmpty)

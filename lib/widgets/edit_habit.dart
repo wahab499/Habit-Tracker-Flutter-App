@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/model/habit.dart';
 import 'package:habit_chain/screens/emoji_selection_screen.dart';
 
@@ -99,10 +100,12 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? MyColors.background : MyColors.white,
+        // color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -117,7 +120,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: MyColors.black,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -134,7 +137,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
 
           // Habit Name
           TextField(
@@ -144,7 +147,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
               border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
 
           // Description
           TextField(
@@ -155,7 +158,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
             ),
             maxLines: 2,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
 
           // Target Frequency
           Card(
@@ -284,7 +287,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: _isGoodHabit == isGood
-              ? color.withOpacity(0.1)
+              ? color.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
@@ -321,7 +324,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -366,7 +369,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: _selectedEmoji == emoji
-                        ? Theme.of(context).primaryColor.withOpacity(0.2)
+                        ? Theme.of(context).primaryColor.withValues(alpha: 0.2)
                         : Colors.grey[200],
                     shape: BoxShape.circle,
                   ),

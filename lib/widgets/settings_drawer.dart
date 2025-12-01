@@ -23,8 +23,8 @@ class SettingsDrawer extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      MyColors.primary.withOpacity(0.2),
-                      MyColors.primary.withOpacity(0.05),
+                      MyColors.primary.withValues(alpha: 0.2),
+                      MyColors.primary.withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

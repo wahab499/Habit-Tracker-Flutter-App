@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:habit_chain/colors.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class General extends StatefulWidget {
@@ -56,6 +57,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final SettingsController settingsController =
         Get.find<SettingsController>();
     return Scaffold(
@@ -76,7 +78,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
+                    color: isDark ? MyColors.black : MyColors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black,
@@ -193,8 +195,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                                               Navigator.pop(context);
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color(0xFF6366F1),
+                                              backgroundColor: MyColors.primary,
                                               foregroundColor: Colors.white,
                                               elevation: 0,
                                               shadowColor: Colors.transparent,
@@ -240,9 +241,12 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Highlight current day',
+                            const Text('Highlight current day',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _currentDay,
                               onChanged: (value) {
                                 setState(() {
@@ -264,7 +268,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: isDark ? MyColors.black : MyColors.white,
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
@@ -286,6 +290,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show View Mode Bottom Bar',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _viewmodebtmbar,
                               onChanged: (value) {
                                 setState(() {
@@ -307,8 +314,13 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Default Mode',
-                                  style: TextStyle(fontSize: 18)),
+                              Text('Default Mode',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: isDark
+                                        ? MyColors.white
+                                        : MyColors.black,
+                                  )),
                               Row(
                                 children: [
                                   ToggleSwitch(
@@ -321,10 +333,12 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                                       Icons.view_list_rounded,
                                     ],
                                     activeBgColors: const [
-                                      [Colors.blue],
-                                      [Colors.blue],
-                                      [Colors.blue],
+                                      [MyColors.primary],
+                                      [MyColors.primary],
+                                      [MyColors.primary],
                                     ],
+                                    inactiveBgColor:
+                                        Colors.grey.withValues(alpha: 0.2),
                                     onToggle: (index) {
                                       print('switched to: $index');
                                     },
@@ -345,6 +359,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Category Filter',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: settingsController.categoryFilter.value,
                               onChanged: (value) {
                                 setState(() {
@@ -367,8 +384,8 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
+                  color: isDark ? MyColors.black : MyColors.white,
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
                       offset: Offset(0.5, 0.1),
@@ -389,6 +406,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Streak Count',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _streakCount,
                               onChanged: (value) {
                                 setState(() {
@@ -407,6 +427,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Streak Goal',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _streakGoal,
                               onChanged: (value) {
                                 setState(() {
@@ -425,6 +448,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Month Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _monthLabels,
                               onChanged: (value) {
                                 setState(() {
@@ -443,6 +469,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Day Labels',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _daylabels,
                               onChanged: (value) {
                                 setState(() {
@@ -461,6 +490,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Show Categories',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _categories,
                               onChanged: (value) {
                                 setState(() {
@@ -481,7 +513,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: isDark ? MyColors.black : MyColors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black,
@@ -503,6 +535,9 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                             const Text('Allow Crashlytics',
                                 style: TextStyle(fontSize: 18)),
                             Switch(
+                              activeTrackColor: MyColors.primary,
+                              focusColor: MyColors.white,
+                              activeColor: MyColors.white,
                               value: _crashlytics,
                               onChanged: (value) {
                                 setState(() {
@@ -548,10 +583,10 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
         child: Container(
           height: 50,
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF6366F1) : Colors.transparent,
+            color: isSelected ? MyColors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected ? const Color(0xFF6366F1) : Colors.grey[300]!,
+              color: isSelected ? MyColors.primary : Colors.grey[300]!,
               width: 2,
             ),
             boxShadow: isSelected
