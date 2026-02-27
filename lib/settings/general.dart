@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:habit_chain/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -37,7 +36,6 @@ class SettingsController extends GetxController {
 }
 
 class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
-  bool _onChange = false;
   bool _viewmodebtmbar = true;
   bool _streakCount = false;
   bool _streakGoal = false;
@@ -81,7 +79,7 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
         Get.find<SettingsController>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'General',
           style: TextStyle(
             fontWeight: FontWeight.w600,

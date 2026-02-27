@@ -50,6 +50,7 @@ class _ContributionGridState extends State<ContributionGrid> {
     super.dispose();
   }
 
+  final isDark = Get.isDarkMode;
   // ------------------ AUTO CENTER CURRENT WEEK ------------------
   void _scrollToCurrentWeek() {
     if (!_scrollController.hasClients) return;
@@ -145,8 +146,8 @@ class _ContributionGridState extends State<ContributionGrid> {
                     border: (isToday &&
                             settingsController.highlightCurrentDay.value)
                         ? Border.all(
-                            color: Colors.white,
-                            width: 2, // thin border
+                            color: isDark ? Colors.white : Colors.black,
+                            width: 1, // thin border
                           )
                         : null,
                   ),

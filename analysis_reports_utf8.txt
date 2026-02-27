@@ -1,0 +1,18 @@
+﻿Analyzing 2 items...                                            
+
+   info - The import of 'package:get/get_state_manager/src/simple/get_controllers.dart' is unnecessary because all of the used elements are also provided by the import of 'package:get/get.dart' - lib\settings\general.dart:3:8 - unnecessary_import
+   info - The private field _onChange could be 'final' - lib\settings\general.dart:40:8 - prefer_final_fields
+warning - The value of the field '_onChange' isn't used - lib\settings\general.dart:40:8 - unused_field
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\settings\general.dart:101:32 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:102:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:104:33 - prefer_const_constructors
+   info - Use a 'SizedBox' to add whitespace to a layout - lib\settings\general.dart:172:37 - sized_box_for_whitespace
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:251:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:253:31 - prefer_const_constructors
+   info - Don't invoke 'print' in production code - lib\settings\general.dart:361:39 - avoid_print
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\settings\general.dart:535:30 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:536:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\settings\general.dart:538:31 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\settings\general.dart:613:44 - deprecated_member_use
+   info - Parameter 'key' could be a super parameter - lib\widgets\github_grid.dart:11:9 - use_super_parameters
+
