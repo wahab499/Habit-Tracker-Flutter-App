@@ -162,6 +162,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
 
           // Target Frequency
           Card(
+            color: MyColors.black,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -190,6 +191,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
           const SizedBox(height: 16),
 
           // Color Selection
+
           const Text(
             'Color',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -216,7 +218,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
                           : null,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 2,
                         ),
                       ],
@@ -226,6 +228,7 @@ class _EditHabitBottomSheetState extends State<EditHabitBottomSheet> {
               },
             ),
           ),
+
           const SizedBox(height: 16),
 
           _buildEmojiSelector(),

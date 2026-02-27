@@ -19,7 +19,6 @@ class Thememode extends StatelessWidget {
       ),
       body: Obx(() {
         final currentTheme = themeController.themeMode;
-
         return Column(
           children: [
             Padding(

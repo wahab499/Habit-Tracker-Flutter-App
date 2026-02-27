@@ -3,7 +3,9 @@ import 'package:habit_chain/colors.dart';
 import 'package:habit_chain/settings/archived.dart';
 import 'package:habit_chain/settings/dataimportexport.dart';
 import 'package:habit_chain/settings/general.dart';
+import 'package:habit_chain/settings/privacy_policy.dart';
 import 'package:habit_chain/settings/reorder_habits.dart';
+import 'package:habit_chain/settings/terms_of_use.dart';
 import 'package:habit_chain/settings/theme.dart';
 
 class SettingsDrawer extends StatelessWidget {
@@ -316,13 +318,23 @@ class SettingsDrawer extends StatelessWidget {
                   icon: Icons.lock,
                   iconBgColor: Colors.pink,
                   title: 'Privacy Policy',
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicy()));
+                  }),
               _buildSettingTile(
                   textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.no_accounts_outlined,
                   iconBgColor: Colors.green,
                   title: 'Terms of Use',
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TermsOfUse()));
+                  }),
               _buildSettingTile(
                   textcolor: isDark ? MyColors.white : MyColors.black,
                   icon: Icons.star,

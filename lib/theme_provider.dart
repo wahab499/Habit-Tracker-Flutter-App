@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeController extends GetxController {
-  final Rx<ThemeMode> _themeMode = ThemeMode.system.obs;
+  final Rx<ThemeMode> _themeMode = ThemeMode.dark.obs;
   static const String _themeKey = 'theme_mode';
 
   ThemeMode get themeMode => _themeMode.value;
@@ -17,7 +17,7 @@ class ThemeController extends GetxController {
   Future<void> _loadTheme() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final themeString = prefs.getString(_themeKey) ?? 'system';
+      final themeString = prefs.getString(_themeKey) ?? 'dark';
       setThemeFromString(themeString);
     } catch (e) {
       // If loading fails, use system default

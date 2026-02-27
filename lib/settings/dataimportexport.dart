@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_chain/colors.dart';
 
 class Dataimportexport extends StatelessWidget {
   const Dataimportexport({super.key});
@@ -33,27 +34,27 @@ class Dataimportexport extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.upload_rounded,
                     size: 60,
-                    color: Colors.amber.shade800,
+                    color: MyColors.primary,
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     'Export Data',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.amber.shade900,
+                      color: MyColors.primary,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  const Text(
                     'Backup your habits and completions safely. You can restore them anytime you want.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey.shade800,
+                      color: MyColors.black,
                       height: 1.4,
                     ),
                   ),
@@ -67,7 +68,7 @@ class Dataimportexport extends StatelessWidget {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber.shade700,
+                      backgroundColor: MyColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
@@ -80,7 +81,7 @@ class Dataimportexport extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
@@ -102,18 +103,18 @@ class Dataimportexport extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.download_rounded,
                     size: 60,
-                    color: Colors.amber.shade800,
+                    color: MyColors.primary,
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     'Import Data',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.amber.shade900,
+                      color: MyColors.primary,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -136,7 +137,7 @@ class Dataimportexport extends StatelessWidget {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber.shade700,
+                      backgroundColor: MyColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),

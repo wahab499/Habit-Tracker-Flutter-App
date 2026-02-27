@@ -39,7 +39,7 @@ class HabitHeaderWidget extends StatelessWidget {
                 habit.name,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: isDark ? MyColors.white : MyColors.white,
+                      color: isDark ? MyColors.white : MyColors.black,
                     ),
               ),
               if (habit.description.isNotEmpty)

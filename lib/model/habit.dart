@@ -13,6 +13,8 @@ class Habit {
   Color color;
   String emoji;
   bool isGoodHabit;
+  bool isArchived;
+  bool isPinned;
 
   Habit({
     required this.id,
@@ -27,6 +29,8 @@ class Habit {
     required this.color,
     required this.emoji,
     this.isGoodHabit = true,
+    this.isArchived = false,
+    this.isPinned = false,
   });
 
   double get weeklyProgress {
@@ -48,6 +52,14 @@ class Habit {
         date.day == today.day);
   }
 
+  bool isCompletedYesterday() {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    return completionDates.any((date) =>
+        date.year == yesterday.year &&
+        date.month == yesterday.month &&
+        date.day == yesterday.day);
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -63,6 +75,8 @@ class Habit {
       'color': color.value,
       'emoji': emoji,
       'isGoodHabit': isGoodHabit,
+      'isArchived': isArchived,
+      'isPinned': isPinned,
     };
   }
 
@@ -82,6 +96,8 @@ class Habit {
       color: Color(json['color']),
       emoji: json['emoji'],
       isGoodHabit: json['isGoodHabit'],
+      isArchived: json['isArchived'] ?? false,
+      isPinned: json['isPinned'] ?? false,
     );
   }
 

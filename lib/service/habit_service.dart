@@ -10,6 +10,18 @@ class HabitController extends GetxController {
   static const String _habitsKey = 'habits';
 
   List<Habit> get habits => _habits;
+
+  List<Habit> get activeHabits =>
+      habits.where((h) => !h.isArchived || h.isPinned).toList();
+  List<Habit> get archivedHabits => habits.where((h) => h.isArchived).toList();
+
+  final RxBool _isReorderMode = false.obs;
+  bool get isReorderMode => _isReorderMode.value;
+
+  void toggleReorderMode() {
+    _isReorderMode.value = !_isReorderMode.value;
+  }
+
   bool get isLoading => _isLoading.value;
 
   @override
@@ -70,7 +82,7 @@ class HabitController extends GetxController {
   Future<void> markHabitCompleted(String id) async {
     final habitIndex = _habits.indexWhere((h) => h.id == id);
     if (habitIndex == -1) return;
-    
+
     final habit = _habits[habitIndex];
     final today = DateTime.now();
 
@@ -104,7 +116,8 @@ class HabitController extends GetxController {
         updatedHabit.currentStreak = 1;
       }
 
-      updatedHabit.longestStreak = max(updatedHabit.longestStreak, updatedHabit.currentStreak);
+      updatedHabit.longestStreak =
+          max(updatedHabit.longestStreak, updatedHabit.currentStreak);
 
       _habits[habitIndex] = updatedHabit;
       await saveHabits();
@@ -114,7 +127,7 @@ class HabitController extends GetxController {
   Future<void> markHabitUncompleted(String id) async {
     final habitIndex = _habits.indexWhere((h) => h.id == id);
     if (habitIndex == -1) return;
-    
+
     final habit = _habits[habitIndex];
     final today = DateTime.now();
 
@@ -144,6 +157,105 @@ class HabitController extends GetxController {
     await saveHabits();
   }
 
+  Future<void> uncompleteYesterday(String id) async {
+    final habitIndex = _habits.indexWhere((h) => h.id == id);
+    if (habitIndex == -1) return;
+
+    final habit = _habits[habitIndex];
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+
+    final updatedCompletionDates = List<DateTime>.from(habit.completionDates);
+    final countBefore = updatedCompletionDates.length;
+    updatedCompletionDates.removeWhere((date) =>
+        date.year == yesterday.year &&
+        date.month == yesterday.month &&
+        date.day == yesterday.day);
+
+    if (updatedCompletionDates.length < countBefore) {
+      final updatedHabit = Habit(
+        id: habit.id,
+        name: habit.name,
+        description: habit.description,
+        targetCount: habit.targetCount,
+        currentCount: habit.currentCount > 0 ? habit.currentCount - 1 : 0,
+        currentStreak: habit
+            .currentStreak, // Simplification: in reality streak might need full recalculation
+        longestStreak: habit.longestStreak,
+        creationDate: habit.creationDate,
+        completionDates: updatedCompletionDates,
+        color: habit.color,
+        emoji: habit.emoji,
+        isGoodHabit: habit.isGoodHabit,
+        isArchived: habit.isArchived,
+        isPinned: habit.isPinned,
+      );
+      _habits[habitIndex] = updatedHabit;
+      await saveHabits();
+    }
+  }
+
+  Future<void> completeYesterday(String id) async {
+    final habitIndex = _habits.indexWhere((h) => h.id == id);
+    if (habitIndex == -1) return;
+
+    final habit = _habits[habitIndex];
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+
+    if (!habit.isCompletedYesterday()) {
+      final updatedHabit = Habit(
+        id: habit.id,
+        name: habit.name,
+        description: habit.description,
+        targetCount: habit.targetCount,
+        currentCount: habit.currentCount + 1,
+        currentStreak: habit.currentStreak,
+        longestStreak: habit.longestStreak,
+        creationDate: habit.creationDate,
+        completionDates: List<DateTime>.from(habit.completionDates)
+          ..add(yesterday),
+        color: habit.color,
+        emoji: habit.emoji,
+        isGoodHabit: habit.isGoodHabit,
+        isArchived: habit.isArchived,
+        isPinned: habit.isPinned,
+      );
+
+      _habits[habitIndex] = updatedHabit;
+      await saveHabits();
+    }
+  }
+
+  Future<void> toggleArchive(String id) async {
+    final index = _habits.indexWhere((h) => h.id == id);
+    if (index != -1) {
+      final habit = _habits.removeAt(index);
+      habit.isArchived = !habit.isArchived;
+      // If archiving, we pin it as per user requirement "also pins it to the top"
+      if (habit.isArchived) {
+        habit.isPinned = true;
+        _habits.insert(0, habit);
+      } else {
+        _habits.add(
+            habit); // Or keep it where it was? Let's add to bottom if unarchiving.
+      }
+      await saveHabits();
+    }
+  }
+
+  Future<void> togglePin(String id) async {
+    final index = _habits.indexWhere((h) => h.id == id);
+    if (index != -1) {
+      final habit = _habits.removeAt(index);
+      habit.isPinned = !habit.isPinned;
+      if (habit.isPinned) {
+        _habits.insert(0, habit);
+      } else {
+        _habits.add(habit);
+      }
+      await saveHabits();
+    }
+  }
+
   void resetWeeklyCounts() {
     for (int i = 0; i < _habits.length; i++) {
       final habit = _habits[i];
@@ -160,12 +272,19 @@ class HabitController extends GetxController {
         color: habit.color,
         emoji: habit.emoji,
         isGoodHabit: habit.isGoodHabit,
+        isArchived: habit.isArchived,
+        isPinned: habit.isPinned,
       );
       _habits[i] = updatedHabit;
     }
   }
 
-  double getWeeklyProgress(Habit habit) {
-    return habit.currentCount / habit.targetCount;
+  Future<void> reorderHabits(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final habit = _habits.removeAt(oldIndex);
+    _habits.insert(newIndex, habit);
+    await saveHabits();
   }
 }

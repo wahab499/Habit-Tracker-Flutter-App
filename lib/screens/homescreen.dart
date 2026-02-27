@@ -184,11 +184,12 @@ class Homescreen extends StatelessWidget {
     Function(Habit) completeHabit,
   ) {
     return Obx(() {
+      final habits = habitController.activeHabits;
       return ListView.builder(
         padding: const EdgeInsets.all(8.0),
-        itemCount: habitController.habits.length,
+        itemCount: habits.length,
         itemBuilder: (context, index) {
-          final habit = habitController.habits[index];
+          final habit = habits[index];
           return Padding(
             padding: const EdgeInsets.only(bottom: 14.0),
             child: HabitCard(

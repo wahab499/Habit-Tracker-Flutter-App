@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:habit_chain/settings/general.dart';
 
-/// GitHub-style contribution grid showing a full year of weeks
-/// - [completionDates]: List of dates when the habit was completed
-/// - [habitColor]: Color to use for completed days
 class ContributionGrid extends StatefulWidget {
   final List<DateTime> completionDates;
   final Color? habitColor;
@@ -22,18 +21,24 @@ class ContributionGrid extends StatefulWidget {
 }
 
 class _ContributionGridState extends State<ContributionGrid> {
-  late DateTime _startOfYear;
   late DateTime _today;
+  late DateTime _startOfWindow;
+  late DateTime _endOfWindow;
   late ScrollController _scrollController;
+
+  final double _boxSize = 10;
 
   @override
   void initState() {
     super.initState();
+
     _today = DateTime.now();
-    _startOfYear = DateTime(_today.year, 1, 1);
+    // Rolling 12-month window: always shows the past 365 days up to today.
+    _startOfWindow = DateTime(_today.year, _today.month, _today.day)
+        .subtract(const Duration(days: 364));
+    _endOfWindow = DateTime(_today.year, _today.month, _today.day);
     _scrollController = ScrollController();
 
-    // Auto-scroll to current week after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToCurrentWeek();
     });
@@ -45,17 +50,32 @@ class _ContributionGridState extends State<ContributionGrid> {
     super.dispose();
   }
 
+  // ------------------ AUTO CENTER CURRENT WEEK ------------------
   void _scrollToCurrentWeek() {
-    if (_scrollController.hasClients) {
-      // Scroll to the very end to show current week as the last column
-      _scrollController.animateTo(
+    if (!_scrollController.hasClients) return;
+
+    final int daysFromStart = _today.difference(_startOfWindow).inDays;
+    final int currentWeekIndex = (daysFromStart / 7).floor();
+
+    final double columnWidth = _boxSize + widget.columnSpacing;
+
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    final double targetOffset = (currentWeekIndex * columnWidth) -
+        (screenWidth / 2) +
+        (columnWidth / 2);
+
+    _scrollController.animateTo(
+      targetOffset.clamp(
+        0.0,
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeInOut,
-      );
-    }
+      ),
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOut,
+    );
   }
 
+  // ------------------ BUILD UI ------------------
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -68,61 +88,79 @@ class _ContributionGridState extends State<ContributionGrid> {
     );
   }
 
+  // ------------------ GENERATE ROLLING 12-MONTH WINDOW ------------------
   List<Widget> _buildWeeks() {
     List<Widget> weeks = [];
 
-    // Get the first Monday of the year or start from Jan 1st
-    DateTime currentDate = _startOfYear;
-    int dayOfWeek = currentDate.weekday;
-    if (dayOfWeek != 1) {
-      // If not Monday, go back to previous Monday
-      currentDate = currentDate.subtract(Duration(days: dayOfWeek - 1));
+    DateTime currentDate = _startOfWindow;
+
+    // Align to Monday so each column starts on Mon
+    if (currentDate.weekday != DateTime.monday) {
+      currentDate =
+          currentDate.subtract(Duration(days: currentDate.weekday - 1));
     }
 
-    // Generate weeks until we cover the entire year plus current week
-    DateTime lastDate =
-        _today.add(Duration(days: 7 - _today.weekday)); // End of current week
-    while (currentDate.isBefore(lastDate) ||
-        currentDate.isAtSameMomentAs(lastDate)) {
+    // End at the Sunday of the week that contains _endOfWindow
+    DateTime lastWeekEnd = _endOfWindow;
+    lastWeekEnd = lastWeekEnd.add(Duration(days: 7 - lastWeekEnd.weekday));
+
+    while (!currentDate.isAfter(lastWeekEnd)) {
       weeks.add(_buildWeek(currentDate));
-      currentDate = currentDate.add(Duration(days: 7));
+      currentDate = currentDate.add(const Duration(days: 7));
     }
 
     return weeks;
   }
 
+  // ------------------ SINGLE WEEK COLUMN ------------------
   Widget _buildWeek(DateTime weekStart) {
     return Padding(
       padding: EdgeInsets.only(right: widget.columnSpacing),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: List.generate(7, (dayIndex) {
-          final dayDate = weekStart.add(Duration(days: dayIndex));
-          final isCompleted = _isDateCompleted(dayDate);
-          final isToday = _isToday(dayDate);
-          final isFutureDate = dayDate.isAfter(_today);
+        children: List.generate(7, (index) {
+          final DateTime dayDate = weekStart.add(Duration(days: index));
+
+          final bool isCompleted = _isDateCompleted(dayDate);
+          final bool isToday = _isToday(dayDate);
+          final bool isFuture = dayDate.isAfter(_today);
+
+          final SettingsController settingsController =
+              Get.find<SettingsController>();
 
           return Padding(
             padding: EdgeInsets.only(bottom: widget.rowSpacing),
-            child: Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: _getDayColor(isCompleted, isToday, isFutureDate),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+            child: Obx(() => Container(
+                  width: _boxSize,
+                  height: _boxSize,
+                  decoration: BoxDecoration(
+                    color: _getDayColor(
+                      isCompleted,
+                      isToday,
+                      isFuture,
+                    ),
+                    borderRadius: BorderRadius.circular(2),
+
+                    // 👇 ADD THIS
+                    border: (isToday &&
+                            settingsController.highlightCurrentDay.value)
+                        ? Border.all(
+                            color: Colors.white,
+                            width: 2, // thin border
+                          )
+                        : null,
+                  ),
+                )),
           );
         }),
       ),
     );
   }
 
+  // ------------------ HELPERS ------------------
   bool _isDateCompleted(DateTime date) {
-    return widget.completionDates.any((completionDate) =>
-        completionDate.year == date.year &&
-        completionDate.month == date.month &&
-        completionDate.day == date.day);
+    return widget.completionDates.any((d) =>
+        d.year == date.year && d.month == date.month && d.day == date.day);
   }
 
   bool _isToday(DateTime date) {
@@ -131,31 +169,21 @@ class _ContributionGridState extends State<ContributionGrid> {
         date.day == _today.day;
   }
 
-  Color _getDayColor(bool isCompleted, bool isToday, bool isFutureDate) {
-    final Color baseColor = widget.habitColor ?? Colors.green;
+  Color _getDayColor(
+    bool isCompleted,
+    bool isToday,
+    bool isFuture,
+  ) {
+    final Color base = widget.habitColor ?? Colors.green;
 
-    if (isFutureDate) {
-      return baseColor.withValues(alpha: 0.1); // Very light for future dates
+    if (isFuture) {
+      return base.withValues(alpha: 0.1);
     } else if (isCompleted) {
-      return baseColor; // Full color for completed days
+      return base;
     } else if (isToday) {
-      return baseColor.withValues(alpha: 0.6); // Medium opacity for today
+      return base.withValues(alpha: 0.1);
     } else {
-      return baseColor.withValues(
-          alpha: 0.15); // Light color for all other boxes
-    }
-  }
-
-  // This method is no longer used since we removed borders, but keeping it in case you need it elsewhere
-  Color _getBorderColor(bool isCompleted, bool isToday, bool isFutureDate) {
-    if (isFutureDate) {
-      return Colors.grey[200]!; // Lighter border for future dates
-    } else if (isToday) {
-      return widget.habitColor ?? Colors.green;
-    } else if (isCompleted) {
-      return widget.habitColor ?? Colors.green;
-    } else {
-      return Colors.grey[300]!;
+      return base.withValues(alpha: 0.15);
     }
   }
 }

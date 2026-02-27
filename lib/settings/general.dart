@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:habit_chain/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class General extends StatefulWidget {
@@ -13,13 +14,31 @@ class General extends StatefulWidget {
 
 class SettingsController extends GetxController {
   var categoryFilter = true.obs;
+  var highlightCurrentDay = false.obs;
+
+  static const String _highlightKey = 'highlight_current_day';
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    highlightCurrentDay.value = prefs.getBool(_highlightKey) ?? false;
+  }
+
+  Future<void> toggleHighlight(bool value) async {
+    highlightCurrentDay.value = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_highlightKey, value);
+  }
 }
 
 class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
   bool _onChange = false;
-  bool _currentDay = false;
   bool _viewmodebtmbar = true;
-  bool _categoryFilter = false;
   bool _streakCount = false;
   bool _streakGoal = false;
   bool _monthLabels = false;
@@ -243,17 +262,16 @@ class _GeneralState extends State<General> with SingleTickerProviderStateMixin {
                           children: [
                             const Text('Highlight current day',
                                 style: TextStyle(fontSize: 18)),
-                            Switch(
-                              activeTrackColor: MyColors.primary,
-                              focusColor: MyColors.white,
-                              activeColor: MyColors.white,
-                              value: _currentDay,
-                              onChanged: (value) {
-                                setState(() {
-                                  _currentDay = value;
-                                });
-                              },
-                            )
+                            Obx(() => Switch(
+                                  activeTrackColor: MyColors.primary,
+                                  focusColor: MyColors.white,
+                                  activeColor: MyColors.white,
+                                  value: settingsController
+                                      .highlightCurrentDay.value,
+                                  onChanged: (value) {
+                                    settingsController.toggleHighlight(value);
+                                  },
+                                ))
                           ],
                         ),
                       ),
